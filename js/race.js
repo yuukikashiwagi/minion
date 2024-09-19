@@ -63,9 +63,9 @@ document.body.appendChild(renderer.domElement)
 
 const controls = new OrbitControls(camera, renderer.domElement)
 
-position_left = {
+// position_left = {
 
-}
+// }
 class Box extends THREE.Mesh {
     constructor({
         width,
