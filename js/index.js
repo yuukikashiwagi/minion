@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
             DeviceOrientationEvent.requestPermission()
                 .then((state) => {
                     if (state === 'granted') {
-                        window.location.href = "index copy.html";
+                        window.location.href = "./sensor.html";
                         // alert('Permission granted for DeviceOrientationEvent');
                     } else {
 
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .catch((err) => console.error(err));
         } else {
             // alert('まず、そんなものないね');
-            window.location.href = "index copy.html";
+            window.location.href = "./sensor.html";
         }
     })
 })
