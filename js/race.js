@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // 指定時間ごとに繰り返し実行される setInterval(実行する内容, 間隔[ms]) タイマーを設定
     var graphtimer = window.setInterval(() => {
         displayData();
+        console.log(camera.positon)
     }, 33); // 33msごとに
 
     function displayData() {
