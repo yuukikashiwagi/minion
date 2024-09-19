@@ -1,4 +1,74 @@
 <!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>加速度・ジャイロ取得demo</title>
+</head>
+
+<body>
+    <button id="start_btn">ゲームを開始する</button>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            /* ビューポートの高さに合わせる */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #start_btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            var startBtn = document.getElementById("start_btn");
+            startBtn.addEventListener("click", () => {
+                if (window.DeviceOrientationEvent && window.DeviceOrientationEvent.requestPermission) {
+                    DeviceOrientationEvent.requestPermission()
+                        .then((state) => {
+                            if (state === 'granted') {
+                                window.location.href = "./content/index.html#score";
+                            } else {
+
+                                alert('Permission not granted for DeviceOrientationEvent');
+                            }
+                        })
+                        .catch((err) => console.error(err));
+                } else {
+                    window.location.href = "./content/index.html#score";
+                }
+            })
+        })
+        // document.getElementById('requestPermission').addEventListener('click', function() {
+        //     if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        //         DeviceOrientationEvent.requestPermission()
+        //             .then(permissionState => {
+        //                 if (permissionState === 'granted') {
+        //                     window.addEventListener('devicemotion', handleMotionEvent);
+        //                 } else {
+        //                     alert('Permission not granted for DeviceOrientationEvent');
+        //                 }
+        //             })
+        //             .catch(console.error);
+        //     } else {
+        //         // iOS 13未満やAndroidの場合
+        //         window.addEventListener('devicemotion', handleMotionEvent);
+        //     }
+        // });
+
+    </script>
+
+</body>
+
+</html>
+
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,6 +77,6 @@
 </head>
 <body>
     <button class = "sensor_permission">加速度センサーを許可して下さい1</button>
-    <script src = 'js/index.js'></script>
+    <script src = './index.js'></script>
 </body>
-</html>
+</html> -->
