@@ -60,9 +60,9 @@ const camera = new THREE.PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
     0.1, // 一番見える近いところ
-    1000, // 一番見える遠いところ
+    10000, // 一番見える遠いところ
 )
-camera.position.set(4.61, 2.74, 8)
+camera.position.set(4.61, 2.74, 0)
 
 const renderer = new THREE.WebGLRenderer({
     alpha: true,
