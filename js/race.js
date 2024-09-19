@@ -6,8 +6,6 @@ window.onload = function(){
     DeviceOrientationEvent.requestPermission()
 }
 
-console.log(window.DeviceOrientationEvent.requestPermission)
-
 window.addEventListener("devicemotion", (dat) => {
     aX = dat.accelerationIncludingGravity.x || 0;
     aY = dat.accelerationIncludingGravity.y || 0;
@@ -19,6 +17,8 @@ window.setInterval(() => {
     displayData();
     // updateCharts();
 }, 33); 
+
+var boxPlace = 1;
 
 function displayData() {
     var resultAcc = document.getElementById("result_acc");
@@ -50,6 +50,9 @@ document.body.appendChild(renderer.domElement)
 
 const controls = new OrbitControls(camera, renderer.domElement)
 
+position_left = {
+
+}
 class Box extends THREE.Mesh {
     constructor({
         width,
@@ -148,16 +151,16 @@ const cube = new Box({
     depth: 1,
     velocity: {
         x: 0,
-        y: -0.01,
-        z: 0
+        y: -0.1,
+        z: 0,
     }
 })
 cube.castShadow = true
 scene.add(cube)
 
 const ground = new Box({
-    width: 10,
-    height: 0.5,
+    width: 12,
+    height: 0.1,
     depth: 50,
     color: '#0369a1',
     position: {
@@ -171,8 +174,9 @@ ground.receiveShadow = true
 scene.add(ground)
 
 const light = new THREE.DirectionalLight(0xffffff, 1)
-light.position.y = 3
-light.position.z = 1
+// light.position.x = 10
+light.position.y = 1
+light.position.z = 0.1
 light.castShadow = true
 scene.add(light)
 
@@ -182,57 +186,57 @@ camera.position.z = 5
 console.log(ground.top)
 console.log(cube.bottom)
 
-const keys = {
-    a: {
-        pressed: false
-    },
-    d: {
-        pressed: false
-    },
-    s: {
-        pressed: false
-    },
-    w: {
-        pressed: false
-    }
-}
+// const keys = {
+//     a: {
+//         pressed: false
+//     },
+//     d: {
+//         pressed: false
+//     },
+//     s: {
+//         pressed: false
+//     },
+//     w: {
+//         pressed: false
+//     }
+// }
 
-window.addEventListener('keydown', (event) => {
-    switch (event.code) {
-        case 'KeyA':
-            keys.a.pressed = true
-            break
-        case 'KeyD':
-            keys.d.pressed = true
-            break
-        case 'KeyS':
-            keys.s.pressed = true
-            break
-        case 'KeyW':
-            keys.w.pressed = true
-            break
-        case 'Space':
-            cube.velocity.y = 0.08
-            break
-    }
-})
+// window.addEventListener('keydown', (event) => {
+//     switch (event.code) {
+//         case 'KeyA':
+//             keys.a.pressed = true
+//             break
+//         case 'KeyD':
+//             keys.d.pressed = true
+//             break
+//         case 'KeyS':
+//             keys.s.pressed = true
+//             break
+//         case 'KeyW':
+//             keys.w.pressed = true
+//             break
+//         case 'Space':
+//             cube.velocity.y = 0.08
+//             break
+//     }
+// })
 
-window.addEventListener('keyup', (event) => {
-    switch (event.code) {
-        case 'KeyA':
-            keys.a.pressed = false
-            break
-        case 'KeyD':
-            keys.d.pressed = false
-            break
-        case 'KeyS':
-            keys.s.pressed = false
-            break
-        case 'KeyW':
-            keys.w.pressed = false
-            break
-    }
-})
+// window.addEventListener('keyup', (event) => {
+//     switch (event.code) {
+//         case 'KeyA':
+//             keys.a.pressed = false
+//             break
+//         case 'KeyD':
+//             keys.d.pressed = false
+//             break
+//         case 'KeyS':
+//             keys.s.pressed = false
+//             break
+//         case 'KeyW':
+//             keys.w.pressed = false
+//             break
+//     }
+// })
 
 const enemies = []
 
