@@ -1,13 +1,13 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
-console.log("fghjk")
+console.log(window.DeviceOrientationEvent.requestPermission)
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
-    0.1,
-    1000,
+    0.1, // 一番見える近いところ
+    1000, // 一番見える遠いところ
 )
 camera.position.set(4.61, 2.74, 8)
 
