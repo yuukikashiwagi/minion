@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .catch((err) => console.error(err));
         } else {
             // alert('まず、そんなものないね');
-            window.location.href = "./race.html";
+            window.location.href = "index copy.html";
         }
     })
 })
