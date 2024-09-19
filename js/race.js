@@ -14,6 +14,18 @@ window.addEventListener("devicemotion", (dat) => {
     aZ = dat.accelerationIncludingGravity.z || 0;
     console.log('Acceleration:', aX, aY, aZ);
 });
+
+function displayData() {
+    var resultAcc = document.getElementById("result_acc");
+    resultAcc.innerHTML = "x: " + aX.toFixed(2) + "<br>" +  // x軸の値
+        "y: " + aY.toFixed(2) + "<br>" +  // y軸の値
+        "z: " + aZ.toFixed(2);            // z軸の値
+    var resultGyro = document.getElementById("result_gyro");
+    resultGyro.innerHTML = "alpha: " + alpha.toFixed(2) + "<br>" +
+        "beta: " + beta.toFixed(2) + "<br>" +
+        "gamma: " + gamma.toFixed(2);
+}
+
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(
     75,
