@@ -1,7 +1,19 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
+window.onload = function(){
+    // ページ読み込み時に実行したい処理
+    DeviceOrientationEvent.requestPermission()
+}
+
 console.log(window.DeviceOrientationEvent.requestPermission)
+
+window.addEventListener("devicemotion", (dat) => {
+    aX = dat.accelerationIncludingGravity.x || 0;
+    aY = dat.accelerationIncludingGravity.y || 0;
+    aZ = dat.accelerationIncludingGravity.z || 0;
+    console.log('Acceleration:', aX, aY, aZ);
+});
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(
     75,
