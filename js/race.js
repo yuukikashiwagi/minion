@@ -44,17 +44,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 var boxPlace = 1;
 
-// function displayData() {
-//     var resultAcc = document.getElementById("result_acc");
-//     resultAcc.innerHTML = "x: " + aX.toFixed(2) + "<br>" +  // x軸の値
-//         "y: " + aY.toFixed(2) + "<br>" +  // y軸の値
-//         "z: " + aZ.toFixed(2);            // z軸の値
-//     var resultGyro = document.getElementById("result_gyro");
-//     resultGyro.innerHTML = "alpha: " + alpha.toFixed(2) + "<br>" +
-//         "beta: " + beta.toFixed(2) + "<br>" +
-//         "gamma: " + gamma.toFixed(2);
-// }
-
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(
     75,
@@ -210,57 +199,57 @@ camera.position.z = 5
 console.log(ground.top)
 console.log(cube.bottom)
 
-// const keys = {
-//     a: {
-//         pressed: false
-//     },
-//     d: {
-//         pressed: false
-//     },
-//     s: {
-//         pressed: false
-//     },
-//     w: {
-//         pressed: false
-//     }
-// }
+const keys = {
+    a: {
+        pressed: false
+    },
+    d: {
+        pressed: false
+    },
+    s: {
+        pressed: false
+    },
+    w: {
+        pressed: false
+    }
+}
 
-// window.addEventListener('keydown', (event) => {
-//     switch (event.code) {
-//         case 'KeyA':
-//             keys.a.pressed = true
-//             break
-//         case 'KeyD':
-//             keys.d.pressed = true
-//             break
-//         case 'KeyS':
-//             keys.s.pressed = true
-//             break
-//         case 'KeyW':
-//             keys.w.pressed = true
-//             break
-//         case 'Space':
-//             cube.velocity.y = 0.08
-//             break
-//     }
-// })
+window.addEventListener('keydown', (event) => {
+    switch (event.code) {
+        case 'KeyA':
+            keys.a.pressed = true
+            break
+        case 'KeyD':
+            keys.d.pressed = true
+            break
+        case 'KeyS':
+            keys.s.pressed = true
+            break
+        case 'KeyW':
+            keys.w.pressed = true
+            break
+        case 'Space':
+            cube.velocity.y = 0.08
+            break
+    }
+})
 
-// window.addEventListener('keyup', (event) => {
-//     switch (event.code) {
-//         case 'KeyA':
-//             keys.a.pressed = false
-//             break
-//         case 'KeyD':
-//             keys.d.pressed = false
-//             break
-//         case 'KeyS':
-//             keys.s.pressed = false
-//             break
-//         case 'KeyW':
-//             keys.w.pressed = false
-//             break
-//     }
-// })
+window.addEventListener('keyup', (event) => {
+    switch (event.code) {
+        case 'KeyA':
+            keys.a.pressed = false
+            break
+        case 'KeyD':
+            keys.d.pressed = false
+            break
+        case 'KeyS':
+            keys.s.pressed = false
+            break
+        case 'KeyW':
+            keys.w.pressed = false
+            break
+    }
+})
 
 const enemies = []
 
