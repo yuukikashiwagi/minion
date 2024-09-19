@@ -7,32 +7,40 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 // }
 
 document.addEventListener("DOMContentLoaded", function () {
-    var aX = 0, aY = 0, aZ = 0; // 加速度の値を入れる変数を3個用意
-    var alpha = 0, beta = 0, gamma = 0; // ジャイロセンサーの値を入れる変数を3個用意
-
-    function handleMotionEvent(dat) {
+    var aX = 0, aY = 0, aZ = 0;                     // 加速度の値を入れる変数を3個用意
+    var alpha = 0, beta = 0, gamma = 0;                            
+    // 加速度センサの値が変化したら実行される devicemotion イベント
+    window.addEventListener("devicemotion", (dat) => {
         aX = dat.accelerationIncludingGravity.x || 0;
         aY = dat.accelerationIncludingGravity.y || 0;
         aZ = dat.accelerationIncludingGravity.z || 0;
-    }
-
-    function handleOrientationEvent(event) {
+        console.log('Acceleration:', aX, aY, aZ);
+    });
+    // ジャイロセンサー
+    window.addEventListener("deviceorientation", (event) => {
         alpha = event.alpha || 0;
         beta = event.beta || 0;
         gamma = event.gamma || 0;
-    }
-
-    
-    window.setInterval(() => {
-        handleMotionEvent();
-        handleOrientationEvent();
-        console.log('Acceleration:', aX, aY, aZ);
-        document.getElementById("acceleration").innerText = `Acceleration - X: ${aX}, Y: ${aY}, Z: ${aZ}`;
-
         console.log('Gyro:', alpha, beta, gamma);
-        document.getElementById("gyro").innerText = `Gyro - Alpha: ${alpha}, Beta: ${beta}, Gamma: ${gamma}`;
-    }, 500); // 500ミリ秒ごとに実行
-})
+    }, false);
+
+    // 指定時間ごとに繰り返し実行される setInterval(実行する内容, 間隔[ms]) タイマーを設定
+    var graphtimer = window.setInterval(() => {
+        displayData();
+    }, 33); // 33msごとに
+
+    function displayData() {
+        var resultAcc = document.getElementById("result_acc");
+        resultAcc.innerHTML = "x: " + aX.toFixed(2) + "<br>" +  // x軸の値
+            "y: " + aY.toFixed(2) + "<br>" +  // y軸の値
+            "z: " + aZ.toFixed(2);            // z軸の値
+        var resultGyro = document.getElementById("result_gyro");
+        resultGyro.innerHTML = "alpha: " + alpha.toFixed(2) + "<br>" +
+            "beta: " + beta.toFixed(2) + "<br>" +
+            "gamma: " + gamma.toFixed(2);
+    }
+}
+)
 
 var boxPlace = 1;
 
