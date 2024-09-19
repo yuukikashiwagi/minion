@@ -6,17 +6,33 @@ window.onload = function(){
     DeviceOrientationEvent.requestPermission()
 }
 
-window.addEventListener("devicemotion", (dat) => {
-    aX = dat.accelerationIncludingGravity.x || 0;
-    aY = dat.accelerationIncludingGravity.y || 0;
-    aZ = dat.accelerationIncludingGravity.z || 0;
-    console.log('Acceleration:', aX, aY, aZ);
-});
+document.addEventListener("DOMContentLoaded", function () {
+    var aX = 0, aY = 0, aZ = 0; // 加速度の値を入れる変数を3個用意
+    var alpha = 0, beta = 0, gamma = 0; // ジャイロセンサーの値を入れる変数を3個用意
 
-window.setInterval(() => {
-    displayData();
-    // updateCharts();
-}, 33); 
+    function handleMotionEvent(dat) {
+        aX = dat.accelerationIncludingGravity.x || 0;
+        aY = dat.accelerationIncludingGravity.y || 0;
+        aZ = dat.accelerationIncludingGravity.z || 0;
+    }
+
+    function handleOrientationEvent(event) {
+        alpha = event.alpha || 0;
+        beta = event.beta || 0;
+        gamma = event.gamma || 0;
+    }
+
+    
+    window.setInterval(() => {
+        handleMotionEvent();
+        handleOrientationEvent();
+        console.log('Acceleration:', aX, aY, aZ);
+        document.getElementById("acceleration").innerText = `Acceleration - X: ${aX}, Y: ${aY}, Z: ${aZ}`;
+
+        console.log('Gyro:', alpha, beta, gamma);
+        document.getElementById("gyro").innerText = `Gyro - Alpha: ${alpha}, Beta: ${beta}, Gamma: ${gamma}`;
+    }, 500); // 500ミリ秒ごとに実行
+})
 
 var boxPlace = 1;
 
