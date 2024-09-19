@@ -14,7 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
                 .catch((err) => console.error(err));
         } else {
-            window.location.href = "./content/index.html#score";
+            alert('まず、そんなものないね');
+            // window.location.href = "./content/index.html#score";
         }
     })
 })
