@@ -5,8 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
             DeviceOrientationEvent.requestPermission()
                 .then((state) => {
                     if (state === 'granted') {
-                        // window.location.href = "./content/index.html#score";
-                        alert('Permission granted for DeviceOrientationEvent');
+                        window.location.href = "./race.html";
+                        // alert('Permission granted for DeviceOrientationEvent');
                     } else {
 
                         alert('Permission not granted for DeviceOrientationEvent');
@@ -14,8 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
                 .catch((err) => console.error(err));
         } else {
-            alert('まず、そんなものないね');
-            // window.location.href = "./content/index.html#score";
+            // alert('まず、そんなものないね');
+            window.location.href = "./race.html";
         }
     })
 })
