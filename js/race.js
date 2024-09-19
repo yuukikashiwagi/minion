@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
-console("fghjk")
+console.log("fghjk")
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(
     75,
