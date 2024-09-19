@@ -1,10 +1,10 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
-window.onload = function(){
-    // ページ読み込み時に実行したい処理
-    DeviceOrientationEvent.requestPermission()
-}
+// window.onload = function(){
+//     // ページ読み込み時に実行したい処理
+//     DeviceOrientationEvent.requestPermission()
+// }
 
 document.addEventListener("DOMContentLoaded", function () {
     var aX = 0, aY = 0, aZ = 0; // 加速度の値を入れる変数を3個用意
@@ -36,16 +36,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
 var boxPlace = 1;
 
-function displayData() {
-    var resultAcc = document.getElementById("result_acc");
-    resultAcc.innerHTML = "x: " + aX.toFixed(2) + "<br>" +  // x軸の値
-        "y: " + aY.toFixed(2) + "<br>" +  // y軸の値
-        "z: " + aZ.toFixed(2);            // z軸の値
-    var resultGyro = document.getElementById("result_gyro");
-    resultGyro.innerHTML = "alpha: " + alpha.toFixed(2) + "<br>" +
-        "beta: " + beta.toFixed(2) + "<br>" +
-        "gamma: " + gamma.toFixed(2);
-}
+// function displayData() {
+//     var resultAcc = document.getElementById("result_acc");
+//     resultAcc.innerHTML = "x: " + aX.toFixed(2) + "<br>" +  // x軸の値
+//         "y: " + aY.toFixed(2) + "<br>" +  // y軸の値
+//         "z: " + aZ.toFixed(2);            // z軸の値
+//     var resultGyro = document.getElementById("result_gyro");
+//     resultGyro.innerHTML = "alpha: " + alpha.toFixed(2) + "<br>" +
+//         "beta: " + beta.toFixed(2) + "<br>" +
+//         "gamma: " + gamma.toFixed(2);
+// }
 
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(
