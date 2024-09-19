@@ -15,6 +15,11 @@ window.addEventListener("devicemotion", (dat) => {
     console.log('Acceleration:', aX, aY, aZ);
 });
 
+window.setInterval(() => {
+    displayData();
+    // updateCharts();
+}, 33); 
+
 function displayData() {
     var resultAcc = document.getElementById("result_acc");
     resultAcc.innerHTML = "x: " + aX.toFixed(2) + "<br>" +  // x軸の値
