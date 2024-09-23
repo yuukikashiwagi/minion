@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 
 // window.onload = function(){
 //     // ページ読み込み時に実行したい処理
@@ -27,7 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // 指定時間ごとに繰り返し実行される setInterval(実行する内容, 間隔[ms]) タイマーを設定
     var graphtimer = window.setInterval(() => {
         displayData();
-        console.log(camera.positon)
     }, 33); // 33msごとに
 
     function displayData() {
@@ -44,15 +44,15 @@ document.addEventListener("DOMContentLoaded", function () {
 )
 
 var boxPlace = 1;
-
+// カメラ
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(
-    75,
+    90, // 視野角
     window.innerWidth / window.innerHeight,
     0.1, // 一番見える近いところ
     10000, // 一番見える遠いところ
 )
-camera.position.set(4.61, 2.74, 0)
+camera.position.set(0, 2.74, 5)
 
 const renderer = new THREE.WebGLRenderer({
     alpha: true,
@@ -63,7 +63,8 @@ renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
 
 const controls = new OrbitControls(camera, renderer.domElement)
-
+// fbxのダウンロード
+const loader = new FBXLoader();
 // position_left = {
 
 // }
@@ -184,19 +185,39 @@ const ground = new Box({
     }
 })
 
+// loader.load('./fbx/run_boy.fbx', (object) => {
+//     // 衝突判定のためのバウンディングボックスを作成
+//     const box = new THREE.Box3().setFromObject(object);
+    
+//     // シーンにオブジェクトを追加
+//     scene.add(object);
+    
+//     // 必要に応じて、バウンディングボックスの情報を保存
+//     // 例えば、衝突判定を行うための変数に格納する
+//     myModel = {
+//         object: object,
+//         boundingBox: box
+//     };
+// }, undefined, (error) => {
+//     console.error(error);
+// });
+
 ground.receiveShadow = true
 scene.add(ground)
 
+// 並行光源の作成
+// 場所によって影が変更されない
 const light = new THREE.DirectionalLight(0xffffff, 1)
-// light.position.x = 10
-light.position.y = 1
-light.position.z = 0.1
+// light.position.x = 1
+// light.position.y = 1
+// light.position.z = 0.1
+light.position.set(10, 10, 10)
 light.castShadow = true
 scene.add(light)
 
 scene.add(new THREE.AmbientLight(0xffffff, 0.5))
 
-camera.position.z = 5
+// camera.position.z = 5
 console.log(ground.top)
 console.log(cube.bottom)
 
