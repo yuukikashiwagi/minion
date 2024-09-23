@@ -1,11 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
-
-// window.onload = function(){
-//     // ページ読み込み時に実行したい処理
-//     DeviceOrientationEvent.requestPermission()
-// }
+// import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import { FBXLoader } from 'https://cdn.jsdelivr.net/npm/three@0.152.0/examples/jsm/loaders/FBXLoader.js';
 
 document.addEventListener("DOMContentLoaded", function () {
     var aX = 0, aY = 0, aZ = 0;                     // 加速度の値を入れる変数を3個用意
@@ -43,6 +39,38 @@ document.addEventListener("DOMContentLoaded", function () {
 }
 )
 
+async function loadResources() {
+    const textureLoader = new THREE.TextureLoader();
+    const fbxLoader = new FBXLoader();
+
+    // texture内に保存されているjpgのパス
+    const textureUrls = [
+        // 'textures/3_road.jpg',
+        'textures/ground.jpg',
+    ];
+
+    // 読み込むFBXモデルのパス
+    const fbxUrls = [
+        'path/to/your/run_boy.fbx',
+    ];
+
+    // テクスチャの読み込み
+    const textures = await Promise.all(textureUrls.map(url => {
+        return new Promise((resolve, reject) => {
+            textureLoader.load(url, resolve, undefined, reject);
+        });
+    }));
+
+    // FBXモデルの読み込み
+    const models = await Promise.all(fbxUrls.map(url => {
+        return new Promise((resolve, reject) => {
+            fbxLoader.load(url, resolve, undefined, reject);
+        });
+    }));
+
+    return { texture, model };
+}
+
 var boxPlace = 1;
 // カメラ
 const scene = new THREE.Scene()
@@ -52,7 +80,7 @@ const camera = new THREE.PerspectiveCamera(
     0.1, // 一番見える近いところ
     10000, // 一番見える遠いところ
 )
-camera.position.set(0, 2.74, 5)
+camera.position.set(0, 5, 30)
 
 const renderer = new THREE.WebGLRenderer({
     alpha: true,
@@ -62,6 +90,7 @@ renderer.shadowMap.enabled = true
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
 
+// カメラの手動制御
 const controls = new OrbitControls(camera, renderer.domElement)
 // fbxのダウンロード
 const loader = new FBXLoader();
@@ -73,6 +102,7 @@ class Box extends THREE.Mesh {
         width,
         height,
         depth,
+        material,
         color = '#00ff00',
         velocity = {
             x: 0,
@@ -88,7 +118,7 @@ class Box extends THREE.Mesh {
     }) {
         super(
             new THREE.BoxGeometry(width, height, depth),
-            new THREE.MeshStandardMaterial({ color })
+            material ? material : new THREE.MeshStandardMaterial({ color })
         )
 
         this.width = width
@@ -111,6 +141,13 @@ class Box extends THREE.Mesh {
 
         this.zAcceleration = zAcceleration
     }
+
+    // if (textureUrl) {
+    //     // テクスチャが指定されている場合
+    //     const textureLoader = new THREE.TextureLoader();
+    //     const texture = textureLoader.load(textureUrl);
+    //     material = new THREE.MeshStandardMaterial({ map: texture });
+    // }
 
     updateSides() {
         this.right = this.position.x + this.width / 2
@@ -164,46 +201,59 @@ const cube = new Box({
     width: 1,
     height: 1,
     depth: 1,
+    color: '#00000000',
     velocity: {
         x: 0,
         y: -0.1,
         z: 0,
+    },
+    position:{
+        x : 0,
+        y : 0,
+        z : 10,
     }
 })
+
 cube.castShadow = true
 scene.add(cube)
 
-const ground = new Box({
-    width: 12,
-    height: 0.1,
-    depth: 50,
-    color: '#0369a1',
-    position: {
-        x: 0,
-        y: -2,
-        z: 0
-    }
-})
+const textureLoader = new THREE.TextureLoader();
 
-// loader.load('./fbx/run_boy.fbx', (object) => {
-//     // 衝突判定のためのバウンディングボックスを作成
-//     const box = new THREE.Box3().setFromObject(object);
-    
-//     // シーンにオブジェクトを追加
-//     scene.add(object);
-    
-//     // 必要に応じて、バウンディングボックスの情報を保存
-//     // 例えば、衝突判定を行うための変数に格納する
-//     myModel = {
-//         object: object,
-//         boundingBox: box
-//     };
-// }, undefined, (error) => {
-//     console.error(error);
-// });
+textureLoader.load('textures/ground.jpg', (texture) => {
+    const material = new THREE.MeshStandardMaterial({ map: texture });
+    const ground = new Box({
+        width: 12,
+        height: 0.1,
+        depth: 50,
+        material: material,
+        position: {
+            x: 0,
+            y: -2,
+            z: 0
+        }
+    });
+    ground.receiveShadow = true
+    scene.add(ground)
 
-ground.receiveShadow = true
-scene.add(ground)
+    animate(ground)
+}, undefined, (error) => {
+    console.error('Error loading texture:', error);
+});
+
+// const ground = new Box({
+//     width: 12,
+//     height: 0.1,
+//     depth: 50,
+//     textureUrl: 'textures/3_road.jpg',
+//     // color: '#0369a1',
+//     position: {
+//         x: 0,
+//         y: -2,
+//         z: 0
+//     }
+// })
+
+
 
 // 並行光源の作成
 // 場所によって影が変更されない
@@ -218,7 +268,7 @@ scene.add(light)
 scene.add(new THREE.AmbientLight(0xffffff, 0.5))
 
 // camera.position.z = 5
-console.log(ground.top)
+// console.log(ground.top)
 console.log(cube.bottom)
 
 const keys = {
@@ -278,11 +328,12 @@ const enemies = []
 let frames = 0
 let spawnRate = 200
 
-function animate() {
+function animate(ground) {
     const animationId = requestAnimationFrame(animate)
     renderer.render(scene, camera)
 
     // movement code
+    // boyの速度
     cube.velocity.x = 0
     cube.velocity.z = 0
     if (keys.a.pressed) cube.velocity.x = -0.05
@@ -324,12 +375,14 @@ function animate() {
             color: 'red',
             zAcceleration: true
         })
-            enemy.castShadow = true
-            scene.add(enemy)
-            enemies.push(enemy)
-        }
-        frames++
+        enemy.castShadow = true
+        scene.add(enemy)
+        enemies.push(enemy)
     }
+    frames++
 
-animate()
+    if (boxCollision({ box1: cube, box2: ground })) {
+        console.log("Collision detected!");
+    }
+}
 
