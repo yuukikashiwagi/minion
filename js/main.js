@@ -2,10 +2,47 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.152.0/examples/jsm/loaders/GLTFLoader.js';
 
+// レーンの設定
+let index = 1
+const course = [-5,0,5]
+
 let mixer;
+
+const gravity = 0.1
+
+let player;
+let player_v_y = 0
+const initial_velocity = 0.5
+let isJumping = false
+let isMoving = false
+
+let phone_list=[]
+let enemy_list = []
+
+let alpha;
+let beta;
+let gamma;
+let aZ;
+
+const textureloader = new THREE.TextureLoader();
+const glbloader = new GLTFLoader();
+
+// texture内に保存されているjpgのパス
+const textureUrls = [
+    'textures/ground.jpg',
+];
+
+// 読み込むGLBモデルのパス
+const glbUrls = [
+    'glb/houses.glb',// 周り
+    'glb/player.glb',// プレイヤー
+    'glb/phone.glb', // コイン
+    'glb/red_corn.glb', // 障害物１
+    'glb/long_red_corn.glb', // 障害物2
+];
+
 // シーン
 var scene = new THREE.Scene();
-
 // カメラ
 const camera = new THREE.PerspectiveCamera(
     90, // 視野角
@@ -33,33 +70,7 @@ const controls = new OrbitControls(camera, renderer.domElement)
 const light = new THREE.DirectionalLight(0xffffff, 1)
 light.position.set(10, 10, 10)
 scene.add(light);
-// scene.add(light)
 
-// texture内に保存されているjpgのパス
-const textureUrls = [
-    'textures/ground.jpg',
-];
-
-// 読み込むGLBモデルのパス
-const glbUrls = [
-    'glb/houses.glb',// 周り
-    'glb/player.glb',// プレイヤー
-    'glb/phone.glb', // コイン
-    'glb/red_corn.glb', // 障害物１
-    'glb/long_red_corn.glb', // 障害物2
-];
-
-const textureloader = new THREE.TextureLoader();
-const glbloader = new GLTFLoader();
-
-// レーンの設定
-let index = 1
-const course = [-5,0,5]
-
-const gravity = 0.1
-let player_v_y = 0
-const initial_velocity = 0.5
-let isJumping = false
 // 建物の描写
 glbloader.load(glbUrls[0], function (gltf) {
     for ( let i = -50 ; i <= 50 ; i++){
@@ -74,7 +85,6 @@ glbloader.load(glbUrls[0], function (gltf) {
 	console.error( error );
 } );
 
-let player;
 // プレイヤー
 glbloader.load(glbUrls[1], function (gltf) {
     player = gltf.scene
@@ -97,7 +107,6 @@ glbloader.load(glbUrls[1], function (gltf) {
 	console.error( error );
 } );
 
-let phone_list=[]
 // スマホの描写
 glbloader.load(glbUrls[2], function (gltf) {
     for ( let g = 1; g < 100 ;g++){
@@ -113,13 +122,11 @@ glbloader.load(glbUrls[2], function (gltf) {
 	console.error( error );
 } );
 
-let enemy_list = []
 // 障害物
 glbloader.load(glbUrls[3], function (gltf) {
     var model = gltf.scene
     model.scale.set(3,2,3)
     model.position.set(0,0,0)
-
 
     scene.add(model)
     for ( let g = 1; g < 100 ;g++){
@@ -150,10 +157,6 @@ textureloader.load(textureUrls[0], function (texture) {
 	console.error(error);
 } );
 
-let alpha;
-let beta;
-let gamma;
-let aZ;
 // センサーの値の読み取り
 document.addEventListener("DOMContentLoaded", function () {
     var aX = 0, aY = 0, aZ = 0;                     // 加速度の値を入れる変数を3個用意
@@ -194,17 +197,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // playerの移動
 function move(){
-    if ( gamma > 20 && !isJumping){
+    if ( gamma > 20 && !isJumping && !isMoving){
         if ( index == 0 || index == 1){
+            isMoving = True
             index += 1
             player.position.x = course[index]
         }
-    }
-    if ( gamma < -20 && !isJumping){
+    }else if ( gamma < -20 && !isJumping && !isMoving){
         if ( index == 1 || index == 2){
+            isMoving = True
             index -= 1
             player.position.x = course[index]
         }
+    }else{
+        isMoving = False
     }
 }
 
@@ -228,7 +234,6 @@ function jump(){
 
 
 // }
-animate();
 
 // 描画関数
 function animate() {
@@ -252,10 +257,7 @@ function animate() {
         phone.rotation.y += 0.01; // Y軸周りに回転
         phone.rotation.z += 0.01; // Y軸周りに回転
     });
-    setInterval(() => {
-        move()
-    },500)
-
+    move()
     jump()
 }
 
@@ -268,3 +270,5 @@ window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix(); // プロジェクションマトリクスを更新
 });
+
+animate();
