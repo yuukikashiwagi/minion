@@ -225,17 +225,16 @@ function move(){
 }
 
 function jump(){
-    if ( !isJumping ){
-        if ( aZ >= 0 ){
-            player_v_y = initial_velocity
-            isJumping = true
-            player.position.y += player_v_y
-        }
+    if ( !isJumping && aZ >= 0){
+        player_v_y = initial_velocity
+        isJumping = true
+        player.position.y += player_v_y
     }else{
         player_v_y -= gravity
         player.position.y += player_v_y
         if (player.position.y <= 0){
             isJumping = false
+            player.position.y = 0
         }
     }
 }
