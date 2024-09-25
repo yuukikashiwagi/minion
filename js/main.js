@@ -180,7 +180,7 @@ function animate() {
     
     if (player) {
         // プレイヤーの位置に基づいてカメラの位置を更新
-        camera.position.set(player.position.x, player.position.y + 5, player.position.z + 10); // プレイヤーの少し上方、後方にカメラを配置
+        camera.position.set(player.position.x, player.position.y + 7, player.position.z + 10); // プレイヤーの少し上方、後方にカメラを配置
         camera.lookAt(player.position); // カメラがプレイヤーを向くように設定
     }
 
@@ -190,3 +190,13 @@ function animate() {
     });
 
 }
+
+// ウィンドウのリサイズイベントをリッスン
+window.addEventListener('resize', () => {
+    // レンダラーのサイズを更新
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    // カメラのアスペクト比を更新
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix(); // プロジェクションマトリクスを更新
+});
