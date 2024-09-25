@@ -194,7 +194,7 @@ function move(index){
     }else if (gamma < -20){
         if ( index == 1 || index == 2){
             index -= 1
-            player.position.x = course[index-1]
+            player.position.x = course[index]
         }
     }
 }
