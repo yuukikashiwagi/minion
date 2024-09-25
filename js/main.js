@@ -190,9 +190,9 @@ document.addEventListener("DOMContentLoaded", function () {
         resultGyro.innerHTML = 
             "alpha: " + alpha.toFixed(2) + "<br>" +
             "beta: " + beta.toFixed(2) + "<br>" +
-            "gamma: " + gamma.toFixed(2) +
-            "index:" + index+
-            isMoving;
+            "gamma: " + gamma.toFixed(2) + "<br>" +
+            "index:" + index + "<br>" +
+            "isMoving:" + isMoving;
     }
 })
 
