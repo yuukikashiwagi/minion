@@ -199,6 +199,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "getPhone" + getPhone + "<br>" +
             "collisionEnemy" + collisionEnemy + "<br>" +
             "aZ" + aZ + "<br>" +
+            "isJumping" + isJumping + "<br>" +
             "更新";
     }
 })
