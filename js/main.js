@@ -55,6 +55,10 @@ const glbloader = new GLTFLoader();
 // レーンの設定
 let index = 1
 const course = [-5,0,5]
+
+const gravity = 0.1
+let player_v_y = 0
+const initial_velocity = 0.5
 // 建物の描写
 glbloader.load(glbUrls[0], function (gltf) {
     for ( let i = -50 ; i <= 50 ; i++){
@@ -148,6 +152,7 @@ textureloader.load(textureUrls[0], function (texture) {
 let alpha;
 let beta;
 let gamma;
+let aZ;
 // センサーの値の読み取り
 document.addEventListener("DOMContentLoaded", function () {
     var aX = 0, aY = 0, aZ = 0;                     // 加速度の値を入れる変数を3個用意
@@ -188,16 +193,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // playerの移動
 function move(){
-    if ( gamma > 20 ){
+    if ( gamma > 20 && aZ == 0){
         if ( index == 0 || index == 1){
             index += 1
             player.position.x = course[index]
         }
     }
-    if (gamma < -20){
+    if ( gamma < -20){
         if ( index == 1 || index == 2){
             index -= 1
             player.position.x = course[index]
+        }
+    }
+}
+
+function jump(){
+    if ( !is_Jumping ){
+        if ( aZ > 0){
+            player_v_y = initial_velocity
+            isJumping = True
+            player.position.y += player_v_y
+        }
+    }else{
+        player_v_y -= gravity
+        player.position.y += player_v_y
+        if (player.position.y <= 0){
+            isJumping = False
         }
     }
 }
@@ -227,8 +248,9 @@ function animate() {
     });
     setInterval(() => {
         move()
-
     },500)
+    
+    jump()
 }
 
 // ウィンドウのリサイズイベントをリッスン
