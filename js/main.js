@@ -146,7 +146,7 @@ glbloader.load(glbUrls[3], function (gltf) {
 
 // 道の描写
 textureloader.load(textureUrls[0], function (texture) {
-    for ( var l = 0 ; l < 10 ; l++){
+    for ( var l = 0 ; l < 3 ; l++){
         const groundGeometry = new THREE.BoxGeometry(24, 100, 0.5); // 地面のジオメトリを作成 (BoxGeometry)
         var sphereMaterial = new THREE.MeshPhongMaterial();
         sphereMaterial.map = texture;
