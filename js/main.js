@@ -173,11 +173,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 33); // 33msごとに
 
     function displayData() {
-        var resultAcc = document.getElementById("result_acc");
+        var resultAcc = document.getElementById("result_ac");
         resultAcc.innerHTML = "x: " + aX.toFixed(2) + "<br>" +  // x軸の値
             "y: " + aY.toFixed(2) + "<br>" +  // y軸の値
             "z: " + aZ.toFixed(2);            // z軸の値
-        var resultGyro = document.getElementById("result_gyro");
+        var resultGyro = document.getElementById("result_acc");
         resultGyro.innerHTML = "alpha: " + alpha.toFixed(2) + "<br>" +
             "beta: " + beta.toFixed(2) + "<br>" +
             "gamma: " + gamma.toFixed(2);
