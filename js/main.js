@@ -117,12 +117,12 @@ glbloader.load(glbUrls[1], function (gltf) {
 // スマホの描写
 glbloader.load(glbUrls[2], function (gltf) {
     var model;
-    for ( var g = 1; g < 25 ;g++){
+    for ( var g = 1; g < 5 ;g++){
         model = gltf.scene.clone()
         model.scale.set(15,15,15)
         model.rotation.set(0,( Math.PI / 4 ),( Math.PI / 4 ))
         const randomIndex = Math.floor(Math.random() * 3) // 0,1,2のランダム
-        model.position.set(course[randomIndex],2,-15*g)
+        model.position.set(course[randomIndex],2,-45*g)
         phone_list.push(model)// オブジェクトのバウンディングボックスを計算
         scene.add(model)
     }
@@ -132,11 +132,11 @@ glbloader.load(glbUrls[2], function (gltf) {
 
 // 障害物
 glbloader.load(glbUrls[3], function (gltf) {
-    for ( var g = 1; g < 25 ;g++){
+    for ( var g = 1; g < 5 ;g++){
         var model = gltf.scene.clone()
         model.scale.set(3,2,3)
         const randomIndex = Math.floor(Math.random() * 3) // 0,1,2のランダム
-        model.position.set(course[randomIndex],1, 10 -23*g)
+        model.position.set(course[randomIndex],1, 10 -47*g)
         enemy_list.push(model)
         scene.add(model)
     }
