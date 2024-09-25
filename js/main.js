@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.152.0/examples/jsm/loaders/GLTFLoader.js';
 
+let mixer;
 // シーン
 var scene = new THREE.Scene();
 
@@ -46,11 +47,12 @@ const textureUrls = [
 // 読み込むGLBモデルのパス
 const glbUrls = [
     'glb/houses.glb',// 周り
+//    ' glb/player_sub.glb',
     'glb/player.glb',// プレイヤー
     'glb/phone.glb', // コイン
     'glb/red_corn.glb', // 障害物１
     'glb/long_red_corn.glb', // 障害物2
-    'glb/run_boy.glb',
+    // 'glb/run_boy.glb',
 ];
 
 const textureloader = new THREE.TextureLoader();
@@ -67,7 +69,9 @@ const glbloader = new GLTFLoader();
 // sky.material.uniforms.sunPosition.value.y= 30000;//太陽の位置
 // sky.material.uniforms.sunPosition.value.z=-40000;//太陽の位置
 // scene.add(sky);
-    
+  
+// レーンの設定
+const course = [-2.5,0,2.5]
 // 建物の描写
 glbloader.load(glbUrls[0], function (gltf) {
     for ( let i = -50 ; i <= 50 ; i++){
@@ -81,20 +85,48 @@ glbloader.load(glbUrls[0], function (gltf) {
 },undefined, function ( error ) {
 	console.error( error );
 } );
+
+let player;
+// プレイヤー
+glbloader.load(glbUrls[5], function (gltf) {
+    player = gltf.scene
+    player.scale.set(3,2,3)
+    player.rotation.set(0,Math.PI,0)
+    player.position.set(0,0,0)
+    mixer = new THREE.AnimationMixer(player);
+
+    // running アクションの取得と再生
+    console.log(gltf.animation)
+    const runningAction = gltf.animations.find(animation => animation.name === 'running');
+    if (runningAction) {
+        mixer.clipAction(runningAction).play();
+        console.log('running animation exists')
+    } else {
+        console.warn('Running animation not found in the model.');
+    }
+    scene.add(player)
+},undefined, function ( error ) {
+	console.error( error );
+} );
+
+let phone_list=[]
 // スマホの描写
 glbloader.load(glbUrls[2], function (gltf) {
-    var model = gltf.scene
-    // model.rotation.set(0, ( Math.PI / 2 ) * Math.sign(i),0)
-    model.scale.set(9,8,9)
-    model.rotation.set(0,( Math.PI / 4 ),( Math.PI / 4 ))
-    model.position.set(2.5,1,0)
-
-    scene.add(model)
+    for ( let g = 1; g < 10 ;g++){
+        var model = gltf.scene.clone()
+        model.scale.set(9,8,9)
+        model.rotation.set(0,( Math.PI / 4 ),( Math.PI / 4 ))
+        const randomIndex = Math.floor(Math.random() * 3) // 0,1,2のランダム
+        model.position.set(course[randomIndex],1,-15*g)
+        phone_list.push(model)
+        scene.add(model)
+    }
     // console.log(model)
 },undefined, function ( error ) {
 	console.error( error );
 } );
 
+let enemy_list = []
 // 障害物
 glbloader.load(glbUrls[3], function (gltf) {
     var model = gltf.scene
@@ -103,6 +135,14 @@ glbloader.load(glbUrls[3], function (gltf) {
     model.position.set(0,0,0)
 
     scene.add(model)
+    for ( let g = 1; g < 10 ;g++){
+        var model = gltf.scene.clone()
+        model.scale.set(3,2,3)
+        const randomIndex = Math.floor(Math.random() * 3) // 0,1,2のランダム
+        model.position.set(course[randomIndex],1, 10 -23*g)
+        enemy_list.push(model)
+        scene.add(model)
+    }
     // console.log(model)
 },undefined, function ( error ) {
 	console.error( error );
@@ -116,7 +156,7 @@ textureloader.load(textureUrls[0], function (texture) {
         sphereMaterial.map = texture;
         const ground = new THREE.Mesh(groundGeometry, sphereMaterial); // メッシュを作成 (ジオメトリ + マテリアル)
         ground.rotation.set( Math.PI / 2 ,0,0)
-        ground.position.set(0, 0, 30-50 -100*l); // 地面の位置を設定
+        ground.position.set(0, -0.3, 30-50 -100*l); // 地面の位置を設定
         ground.receiveShadow = true; // 影を受け取る設定
         scene.add(ground);
     }
@@ -132,4 +172,21 @@ function animate() {
     const animationId = requestAnimationFrame(animate)
     renderer.render(scene, camera);
     // console.log(camera.position)
+    if (mixer) {
+        mixer.update(0.01); // delta time（時間の経過量）
+    }
+
+    player.position.z -= 0.1
+    
+    if (player) {
+        // プレイヤーの位置に基づいてカメラの位置を更新
+        camera.position.set(player.position.x, player.position.y + 5, player.position.z + 10); // プレイヤーの少し上方、後方にカメラを配置
+        camera.lookAt(player.position); // カメラがプレイヤーを向くように設定
+    }
+
+    phone_list.forEach(phone => {
+        phone.rotation.x += 0.01; // X軸周りに回転
+        phone.rotation.y += 0.01; // Y軸周りに回転
+    });
+
 }
