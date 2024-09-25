@@ -29,6 +29,7 @@ let gamma;
 let aZ;
 
 let getPhone = 0
+let collisionEnemy = 0
 
 const textureloader = new THREE.TextureLoader();
 const glbloader = new GLTFLoader();
@@ -194,7 +195,11 @@ document.addEventListener("DOMContentLoaded", function () {
             "beta: " + beta.toFixed(2) + "<br>" +
             "gamma: " + gamma.toFixed(2) + "<br>" +
             "index:" + index + "<br>" +
-            "isMoving:" + isMoving + "更新";
+            "isMoving:" + isMoving + "<br>" +
+            "getPhone" + getPhone + "<br>" +
+            "collisionEnemy" + collisionEnemy + "<br>" +
+            "aZ" + aZ + "<br>" +
+            "更新";
     }
 })
 
@@ -243,37 +248,66 @@ function collision(){
     playerBox.position.x = player.position.x
     playerBox.position.y = player.position.y + 2 
     playerBox.position.z = player.position.z
+    playerBox.updateWorldMatrix(true, true);
     var playerBoundingBox = new THREE.Box3().setFromObject(playerBox);
     var playerHelper = new THREE.Box3Helper(playerBoundingBox, 0xff0000);
     scene.add(playerHelper)
     let i = 0
 
-    for (var enemy of enemy_list){
+    // 配列をフィルタリングするための新しい配列を作成
+    enemy_list = enemy_list.filter((enemy) => {
         var enemyBoundingBox = new THREE.Box3().setFromObject(enemy);
-        const enemyHelper = new THREE.Box3Helper(enemyBoundingBox, 0xff0000);
+        var enemyHelper = new THREE.Box3Helper(enemyBoundingBox, 0xff0000);
         scene.add(enemyHelper);
+        
         if (playerBoundingBox.intersectsBox(enemyBoundingBox)) {
             console.log('衝突しています');
-            delete enemy_list[i];
-        } else {
-            i += 1
-            // console.log('衝突していません');
+            collisionEnemy += 1;
+            return false; // この敵を削除
         }
-    }
+        return true; // この敵を保持
+    });
 
-    for (var phone of phone_list){
+    // スマホオブジェクトの衝突判定
+    phone_list = phone_list.filter((phone) => {
         var phoneBoundingBox = new THREE.Box3().setFromObject(phone);
-        const phoneHelper = new THREE.Box3Helper(phoneBoundingBox, 0xff0000);
+        var phoneHelper = new THREE.Box3Helper(phoneBoundingBox, 0xff0000);
         scene.add(phoneHelper);
+        
         if (playerBoundingBox.intersectsBox(phoneBoundingBox)) {
             console.log('衝突しています');
-            getPhone += 1
-            delete phone_list[i];
-        } else {
-            i += 1
-            // console.log('衝突していません');
+            getPhone += 1;
+            return false; // このスマホを削除
         }
-    }
+        return true; // このスマホを保持
+    });
+
+    // for (var enemy of enemy_list){
+    //     var enemyBoundingBox = new THREE.Box3().setFromObject(enemy);
+    //     var enemyHelper = new THREE.Box3Helper(enemyBoundingBox, 0xff0000);
+    //     scene.add(enemyHelper);
+    //     if (playerBoundingBox.intersectsBox(enemyBoundingBox)) {
+    //         console.log('衝突しています');
+    //         delete enemy_list[i];
+    //     } else {
+    //         i += 1
+    //         // console.log('衝突していません');
+    //     }
+    // }
+
+    // for (var phone of phone_list){
+    //     var phoneBoundingBox = new THREE.Box3().setFromObject(phone);
+    //     var phoneHelper = new THREE.Box3Helper(phoneBoundingBox, 0xff0000);
+    //     scene.add(phoneHelper);
+    //     if (playerBoundingBox.intersectsBox(phoneBoundingBox)) {
+    //         console.log('衝突しています');
+    //         getPhone += 1
+    //         delete phone_list[i];
+    //     } else {
+    //         i += 1
+    //         // console.log('衝突していません');
+    //     }
+    // }
     scene.remove(playerHelper);
     playerBox.material.dispose();
     playerBox.geometry.dispose();
@@ -282,7 +316,6 @@ function collision(){
 // 描画関数
 function animate() {
     const animationId = requestAnimationFrame(animate)
-    renderer.render(scene, camera);
     // console.log(camera.position)
     if (mixer) {
         mixer.update(0.01); // delta time（時間の経過量）
@@ -300,6 +333,8 @@ function animate() {
     move()
     jump()
     collision()
+
+    renderer.render(scene, camera);
 }
 
 // ウィンドウのリサイズイベントをリッスン
