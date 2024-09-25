@@ -11,6 +11,8 @@ let mixer;
 const gravity = 0.1
 
 let player;
+let playerBox;
+let playerBoundingBox;
 let player_v_y = 0
 const initial_velocity = 0.5
 let isJumping = false
@@ -18,11 +20,15 @@ let isMoving = false
 
 let phone_list=[]
 let enemy_list = []
+let phone_hit_list = []
+let enemy_hit_list = []
 
 let alpha;
 let beta;
 let gamma;
 let aZ;
+
+let getPhone = 0
 
 const textureloader = new THREE.TextureLoader();
 const glbloader = new GLTFLoader();
@@ -73,7 +79,7 @@ scene.add(light);
 
 // 建物の描写
 glbloader.load(glbUrls[0], function (gltf) {
-    for ( let i = -50 ; i <= 50 ; i++){
+    for ( var i = -12 ; i <= 12 ; i++){
         if (i !== 0){
             var model = gltf.scene.clone()
             model.rotation.set(0, ( Math.PI / 2 ) * Math.sign(i),0)
@@ -109,13 +115,14 @@ glbloader.load(glbUrls[1], function (gltf) {
 
 // スマホの描写
 glbloader.load(glbUrls[2], function (gltf) {
-    for ( let g = 1; g < 100 ;g++){
-        var model = gltf.scene.clone()
+    var model;
+    for ( var g = 1; g < 25 ;g++){
+        model = gltf.scene.clone()
         model.scale.set(15,15,15)
         model.rotation.set(0,( Math.PI / 4 ),( Math.PI / 4 ))
         const randomIndex = Math.floor(Math.random() * 3) // 0,1,2のランダム
         model.position.set(course[randomIndex],2,-15*g)
-        phone_list.push(model)
+        phone_list.push(model)// オブジェクトのバウンディングボックスを計算
         scene.add(model)
     }
 },undefined, function ( error ) {
@@ -124,12 +131,7 @@ glbloader.load(glbUrls[2], function (gltf) {
 
 // 障害物
 glbloader.load(glbUrls[3], function (gltf) {
-    var model = gltf.scene
-    model.scale.set(3,2,3)
-    model.position.set(0,0,0)
-
-    scene.add(model)
-    for ( let g = 1; g < 100 ;g++){
+    for ( var g = 1; g < 25 ;g++){
         var model = gltf.scene.clone()
         model.scale.set(3,2,3)
         const randomIndex = Math.floor(Math.random() * 3) // 0,1,2のランダム
@@ -143,7 +145,7 @@ glbloader.load(glbUrls[3], function (gltf) {
 
 // 道の描写
 textureloader.load(textureUrls[0], function (texture) {
-    for ( let l = 0 ; l < 30 ; l++){
+    for ( var l = 0 ; l < 10 ; l++){
         const groundGeometry = new THREE.BoxGeometry(24, 100, 0.5); // 地面のジオメトリを作成 (BoxGeometry)
         var sphereMaterial = new THREE.MeshPhongMaterial();
         sphereMaterial.map = texture;
@@ -220,39 +222,76 @@ function jump(){
     if ( !isJumping ){
         if ( aZ > 0 ){
             player_v_y = initial_velocity
-            isJumping = True
+            isJumping = true
             player.position.y += player_v_y
         }
     }else{
         player_v_y -= gravity
         player.position.y += player_v_y
         if (player.position.y <= 0){
-            isJumping = False
+            isJumping = false
         }
     }
 }
 
 function collision(){
+    // コライダーボックスの位置をプレイヤーに同期
+    var geometry = new THREE.BoxGeometry(3,4,2)
+    const material = new THREE.MeshPhongMaterial({color: 0xFF0000});
+    // メッシュを作成
+    playerBox = new THREE.Mesh(geometry, material);
+    playerBox.position.x = player.position.x
+    playerBox.position.y = player.position.y + 2 
+    playerBox.position.z = player.position.z
+    var playerBoundingBox = new THREE.Box3().setFromObject(playerBox);
+    var playerHelper = new THREE.Box3Helper(playerBoundingBox, 0xff0000);
+    scene.add(playerHelper)
+    let i = 0
 
+    for (var enemy of enemy_list){
+        var enemyBoundingBox = new THREE.Box3().setFromObject(enemy);
+        const enemyHelper = new THREE.Box3Helper(enemyBoundingBox, 0xff0000);
+        scene.add(enemyHelper);
+        if (playerBoundingBox.intersectsBox(enemyBoundingBox)) {
+            console.log('衝突しています');
+            delete enemy_list[i];
+        } else {
+            i += 1
+            // console.log('衝突していません');
+        }
+    }
 
+    for (var phone of phone_list){
+        var phoneBoundingBox = new THREE.Box3().setFromObject(phone);
+        const phoneHelper = new THREE.Box3Helper(phoneBoundingBox, 0xff0000);
+        scene.add(phoneHelper);
+        if (playerBoundingBox.intersectsBox(phoneBoundingBox)) {
+            console.log('衝突しています');
+            getPhone += 1
+            delete phone_list[i];
+        } else {
+            i += 1
+            // console.log('衝突していません');
+        }
+    }
+    scene.remove(playerHelper);
+    playerBox.material.dispose();
+    playerBox.geometry.dispose();
 }
 
 // 描画関数
 function animate() {
-    // sphere.rotation.y += 0.02;
     const animationId = requestAnimationFrame(animate)
     renderer.render(scene, camera);
     // console.log(camera.position)
     if (mixer) {
         mixer.update(0.01); // delta time（時間の経過量）
     }
-    
     if (player) {
         // プレイヤーの位置に基づいてカメラの位置を更新
         camera.position.set(player.position.x, player.position.y + 7, player.position.z + 10); // プレイヤーの少し上方、後方にカメラを配置
         camera.lookAt(player.position); // カメラがプレイヤーを向くように設定
     }
-
     phone_list.forEach(phone => {
         phone.rotation.x += 0.01; // X軸周りに回転
         phone.rotation.y += 0.01; // Y軸周りに回転
@@ -260,6 +299,7 @@ function animate() {
     });
     move()
     jump()
+    collision()
 }
 
 // ウィンドウのリサイズイベントをリッスン
