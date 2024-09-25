@@ -193,7 +193,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // playerの移動
 function move(){
-    if ( gamma > 20 && aZ == 0){
+    if ( gamma > 20 && !isJumping){
         if ( index == 0 || index == 1){
             index += 1
             player.position.x = course[index]
@@ -249,7 +249,7 @@ function animate() {
     setInterval(() => {
         move()
     },500)
-    
+
     jump()
 }
 
