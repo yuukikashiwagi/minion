@@ -211,7 +211,7 @@ function move(){
             index -= 1
             player.position.x = course[index]
         }
-    }else if (gamma < 0.5 || gamma > -0.5){
+    }else if (gamma < 0.5 && gamma > -0.5){
         isMoving = false
     }
 }
