@@ -178,20 +178,23 @@ document.addEventListener("DOMContentLoaded", function () {
             "y: " + aY.toFixed(2) + "<br>" +  // y軸の値
             "z: " + aZ.toFixed(2);            // z軸の値
         var resultGyro = document.getElementById("result_acc");
-        resultGyro.innerHTML = "alpha: " + alpha.toFixed(2) + "<br>" +
+        resultGyro.innerHTML = 
+            "alpha: " + alpha.toFixed(2) + "<br>" +
             "beta: " + beta.toFixed(2) + "<br>" +
-            "gamma: " + gamma.toFixed(2);
+            "gamma: " + gamma.toFixed(2) +
+            "index:" + index;
     }
 })
 
 // playerの移動
-function move(index){
+function move(){
     if ( gamma > 20 ){
         if ( index == 0 || index == 1){
             index += 1
             player.position.x = course[index]
         }
-    }else if (gamma < -20){
+    }
+    if (gamma < -20){
         if ( index == 1 || index == 2){
             index -= 1
             player.position.x = course[index]
@@ -223,7 +226,7 @@ function animate() {
         phone.rotation.z += 0.01; // Y軸周りに回転
     });
 
-    move(index)
+    move()
 }
 
 // ウィンドウのリサイズイベントをリッスン
