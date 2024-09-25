@@ -52,7 +52,8 @@ async function loadResources() {
 
     // 読み込むFBXモデルのパス
     const fbxUrls = [
-        'path/to/your/run_boy.fbx',
+        'fbx/houses.fbx',
+        'fbx/run_boy.fbx',
     ];
 
     // テクスチャの読み込み
@@ -85,7 +86,7 @@ camera.position.set(0, 2.74, 5)
 
 // レンダラー
 const renderer = new THREE.WebGLRenderer({
-    alpha: true, // 画像透明
+    alpha: false, // 画像透明
     antialias: true
 })
 renderer.shadowMap.enabled = true // 影
@@ -102,26 +103,26 @@ function boxCollision({ box1, box2 }) {
     return xCollision && yCollision && zCollision
 }
 
-textureLoader.load('textures/ground.jpg', (texture) => {
-    const material = new THREE.MeshStandardMaterial({ map: texture });
-    const ground = new Box({
-        width: 12,
-        height: 0.1,
-        depth: 50,
-        material: material,
-        position: {
-            x: 0,
-            y: -2,
-            z: 0
-        }
-    });
-    ground.receiveShadow = true
-    scene.add(ground)
+// textureLoader.load('textures/ground.jpg', (texture) => {
+//     const material = new THREE.MeshStandardMaterial({ map: texture });
+//     const ground = new Box({
+//         width: 12,
+//         height: 0.1,
+//         depth: 50,
+//         material: material,
+//         position: {
+//             x: 0,
+//             y: -2,
+//             z: 0
+//         }
+//     });
+//     ground.receiveShadow = true
+//     scene.add(ground)
 
-    animate(ground)
-}, undefined, (error) => {
-    console.error('Error loading texture:', error);
-});
+//     animate(ground)
+// }, undefined, (error) => {
+//     console.error('Error loading texture:', error);
+// });
 
 // 全てのリソースが読み込まれた後の処理
 loadResources().then(({ textures, models }) => {
@@ -166,7 +167,5 @@ scene.add(new THREE.AmbientLight(0xffffff, 0.5))
 function animate(ground) {
     const animationId = requestAnimationFrame(animate)
     renderer.render(scene, camera)
-
-    cube.update(ground)
 }
 

@@ -21,27 +21,39 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log('Gyro:', alpha, beta, gamma);
     }, false);
 
-    // 指定時間ごとに繰り返し実行される setInterval(実行する内容, 間隔[ms]) タイマーを設定
-    var graphtimer = window.setInterval(() => {
-        displayData();
-    }, 33); // 33msごとに
+    // // 指定時間ごとに繰り返し実行される setInterval(実行する内容, 間隔[ms]) タイマーを設定
+    // var graphtimer = window.setInterval(() => {
+    //     displayData();
+    // }, 33); // 33msごとに
 
-    function displayData() {
-        var resultAcc = document.getElementById("result_acc");
-        resultAcc.innerHTML = "x: " + aX.toFixed(2) + "<br>" +  // x軸の値
-            "y: " + aY.toFixed(2) + "<br>" +  // y軸の値
-            "z: " + aZ.toFixed(2);            // z軸の値
-        var resultGyro = document.getElementById("result_gyro");
-        resultGyro.innerHTML = "alpha: " + alpha.toFixed(2) + "<br>" +
-            "beta: " + beta.toFixed(2) + "<br>" +
-            "gamma: " + gamma.toFixed(2);
-    }
+    // function displayData() {
+    //     var resultAcc = document.getElementById("result_acc");
+    //     resultAcc.innerHTML = "x: " + aX.toFixed(2) + "<br>" +  // x軸の値
+    //         "y: " + aY.toFixed(2) + "<br>" +  // y軸の値
+    //         "z: " + aZ.toFixed(2);            // z軸の値
+    //     var resultGyro = document.getElementById("result_gyro");
+    //     resultGyro.innerHTML = "alpha: " + alpha.toFixed(2) + "<br>" +
+    //         "beta: " + beta.toFixed(2) + "<br>" +
+    //         "gamma: " + gamma.toFixed(2);
+    // }
 }
 )
 
+
+// ウィンドウのリサイズイベントをリッスン
+window.addEventListener('resize', () => {
+    // レンダラーのサイズを更新
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    // カメラのアスペクト比を更新
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix(); // プロジェクションマトリクスを更新
+});
+
+
 async function loadResources() {
     const textureLoader = new THREE.TextureLoader();
-    const fbxLoader = new FBXLoader();
+    // const fbxLoader = new FBXLoader();
 
     // texture内に保存されているjpgのパス
     const textureUrls = [
@@ -49,10 +61,11 @@ async function loadResources() {
         'textures/ground.jpg',
     ];
 
-    // 読み込むFBXモデルのパス
-    const fbxUrls = [
-        'path/to/your/run_boy.fbx',
-    ];
+    // // 読み込むFBXモデルのパス
+    // const fbxUrls = [
+    //     'fbx/run_boy.fbx',
+    //     'fbx/houses.fbx',
+    // ];
 
     // テクスチャの読み込み
     const textures = await Promise.all(textureUrls.map(url => {
@@ -61,16 +74,16 @@ async function loadResources() {
         });
     }));
 
-    // FBXモデルの読み込み
-    const models = await Promise.all(fbxUrls.map(url => {
-        return new Promise((resolve, reject) => {
-            fbxLoader.load(url, resolve, undefined, reject);
-        });
-    }));
+    // // FBXモデルの読み込み
+    // const models = await Promise.all(fbxUrls.map(url => {
+    //     return new Promise((resolve, reject) => {
+    //         fbxLoader.load(url, resolve, undefined, reject);
+    //     });
+    // }));
 
-    return { texture, model };
+    // return { texture, model };
+    return textures;
 }
-
 var boxPlace = 1;
 // カメラ
 const scene = new THREE.Scene()
@@ -219,25 +232,90 @@ scene.add(cube)
 
 const textureLoader = new THREE.TextureLoader();
 
-textureLoader.load('textures/ground.jpg', (texture) => {
-    const material = new THREE.MeshStandardMaterial({ map: texture });
-    const ground = new Box({
-        width: 12,
-        height: 0.1,
-        depth: 50,
-        material: material,
-        position: {
-            x: 0,
-            y: -2,
-            z: 0
-        }
-    });
+// textureLoader.load('textures/ground.jpg', (texture) => {
+//     const material = new THREE.MeshStandardMaterial({ map: texture });
+//     const ground = new Box({
+//         width: 12,
+//         height: 0.1,
+//         depth: 50,
+//         material: material,
+//         position: {
+//             x: 0,
+//             y: -2,
+//             z: 0
+//         }
+//     });
+//     ground.receiveShadow = true
+//     scene.add(ground)
+
+//     // scene.add(model[0])
+//     // model[0].position.set(0, 0, 1); // (x, y, z)
+//     // model[0].rotation.set(THREE.MathUtils.degToRad(180), 0, 0); 
+
+//     animate(ground)
+// }, undefined, (error) => {
+//     console.error('Error loading texture:', error);
+// });
+
+// 全てのリソースが読み込まれた後の処理
+loadResources().then(({ textures }) => {
+    console.log('texturesは取得できたか')
+    // console.log(textureUrls[0])
+    // const material = new THREE.MeshStandardMaterial({ map: textures });
+    const material = new THREE.MeshStandardMaterial({ map: textures[0] }); 
+    // 地面のジオメトリを作成 (BoxGeometry)
+    const groundGeometry = new THREE.BoxGeometry(12, 0.5, 50);
+
+    // メッシュを作成 (ジオメトリ + マテリアル)
+    const ground = new THREE.Mesh(groundGeometry, material);
+
+    // 地面の位置を設定
+    ground.position.set(0, 0, 0);
+    // const ground = new Box({
+    //             width: 12,
+    //             height: 0.1,
+    //             depth: 50,
+    //             material: material,
+    //             position: {
+    //                 x: 0,
+    //                 y: -2,
+    //                 z: 0
+    //             }
+    //         });
     ground.receiveShadow = true
     scene.add(ground)
+        // マテリアルを作成してモデルに適用
+    // models.forEach((model, index) => {
+    //     const material = new THREE.MeshStandardMaterial({ map: textures[index % textures.length] }); // テクスチャをループして適用
 
-    animate(ground)
-}, undefined, (error) => {
-    console.error('Error loading texture:', error);
+    //     // model.traverse((child) => {
+    //     //     if (child.isMesh) {
+    //     //         child.material = material;
+    //     //     }
+    //     // });
+
+    //     // モデルをシーンに追加
+    //     scene.add(model);
+    // });
+        // scene.add(model[0])
+        // model[0].position.set(0, 0, 1); // (x, y, z)
+        // model[0].rotation.set(THREE.MathUtils.degToRad(180), 0, 0); 
+
+    // アニメーションループ
+    const animate = () => {
+        requestAnimationFrame(animate);
+        
+        // モデルを回転させる
+        // models.forEach(model => {
+        //     model.rotation.y += 0.01; // Y軸周りに回転
+        // });
+
+        renderer.render(scene, camera);
+    };
+
+    animate();
+}).catch((error) => {
+    console.error('Error loading resources:', error);
 });
 
 // const ground = new Box({
@@ -381,8 +459,7 @@ function animate(ground) {
     }
     frames++
 
-    if (boxCollision({ box1: cube, box2: ground })) {
+    if (boxCollision({ box1: enemy, box2: ground })) {
         console.log("Collision detected!");
     }
 }
-
