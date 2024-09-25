@@ -200,7 +200,7 @@ function move(){
             player.position.x = course[index]
         }
     }
-    if ( gamma < -20){
+    if ( gamma < -20 && !isJumping){
         if ( index == 1 || index == 2){
             index -= 1
             player.position.x = course[index]
