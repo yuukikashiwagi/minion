@@ -31,10 +31,6 @@ const controls = new OrbitControls(camera, renderer.domElement)
 // 並行光源の作成
 // 場所によって影が変更されない
 const light = new THREE.DirectionalLight(0xffffff, 1)
-// var light = new THREE.AmbientLight(0xFFFFFF, 10); // 光源色を指定して生成
-// const light = new THREE.HemisphereLight(0x888888, 0x0000FF, 1);
-// light.position.set(0, 10, 0)
-// light.castShadow = true
 light.position.set(10, 10, 10)
 scene.add(light);
 // scene.add(light)
@@ -47,38 +43,25 @@ const textureUrls = [
 // 読み込むGLBモデルのパス
 const glbUrls = [
     'glb/houses.glb',// 周り
-//    ' glb/player_sub.glb',
     'glb/player.glb',// プレイヤー
     'glb/phone.glb', // コイン
     'glb/red_corn.glb', // 障害物１
     'glb/long_red_corn.glb', // 障害物2
-    // 'glb/run_boy.glb',
 ];
 
 const textureloader = new THREE.TextureLoader();
 const glbloader = new GLTFLoader();
 
-// 空の描写
-// let sky=new THREE.Sky();
-// sky.scale.setScalar(50000);
-// sky.material.uniforms.turbidity.value=0.8;// 大気の透明度
-// sky.material.uniforms.rayleigh.value=0.3;// 入射する光子の数
-// sky.material.uniforms.mieCoefficient.value=0.005;// 太陽光の散乱度 三重係数
-// sky.material.uniforms.mieDirectionalG.value=0.8; // 太陽光の散乱度 三重指向性G
-// sky.material.uniforms.sunPosition.value.x= 10000;//太陽の位置
-// sky.material.uniforms.sunPosition.value.y= 30000;//太陽の位置
-// sky.material.uniforms.sunPosition.value.z=-40000;//太陽の位置
-// scene.add(sky);
-  
 // レーンの設定
-const course = [-2.5,0,2.5]
+let index = 1
+const course = [-4,0,4]
 // 建物の描写
 glbloader.load(glbUrls[0], function (gltf) {
     for ( let i = -50 ; i <= 50 ; i++){
         if (i !== 0){
             var model = gltf.scene.clone()
             model.rotation.set(0, ( Math.PI / 2 ) * Math.sign(i),0)
-            model.position.set(-10.5 * Math.sign(i),0, 30 -10 * Math.abs(i))
+            model.position.set(-14 * Math.sign(i),0, 30 -10 * Math.abs(i))
             scene.add(model)
         }
     }
@@ -112,16 +95,15 @@ glbloader.load(glbUrls[1], function (gltf) {
 let phone_list=[]
 // スマホの描写
 glbloader.load(glbUrls[2], function (gltf) {
-    for ( let g = 1; g < 10 ;g++){
+    for ( let g = 1; g < 100 ;g++){
         var model = gltf.scene.clone()
-        model.scale.set(9,8,9)
+        model.scale.set(15,15,15)
         model.rotation.set(0,( Math.PI / 4 ),( Math.PI / 4 ))
         const randomIndex = Math.floor(Math.random() * 3) // 0,1,2のランダム
-        model.position.set(course[randomIndex],1,-15*g)
+        model.position.set(course[randomIndex],2,-15*g)
         phone_list.push(model)
         scene.add(model)
     }
-    // console.log(model)
 },undefined, function ( error ) {
 	console.error( error );
 } );
@@ -130,12 +112,12 @@ let enemy_list = []
 // 障害物
 glbloader.load(glbUrls[3], function (gltf) {
     var model = gltf.scene
-    // model.rotation.set(0, ( Math.PI / 2 ) * Math.sign(i),0)
     model.scale.set(3,2,3)
     model.position.set(0,0,0)
 
+
     scene.add(model)
-    for ( let g = 1; g < 10 ;g++){
+    for ( let g = 1; g < 100 ;g++){
         var model = gltf.scene.clone()
         model.scale.set(3,2,3)
         const randomIndex = Math.floor(Math.random() * 3) // 0,1,2のランダム
@@ -143,7 +125,6 @@ glbloader.load(glbUrls[3], function (gltf) {
         enemy_list.push(model)
         scene.add(model)
     }
-    // console.log(model)
 },undefined, function ( error ) {
 	console.error( error );
 } );
@@ -151,7 +132,7 @@ glbloader.load(glbUrls[3], function (gltf) {
 // 道の描写
 textureloader.load(textureUrls[0], function (texture) {
     for ( let l = 0 ; l < 30 ; l++){
-        const groundGeometry = new THREE.BoxGeometry(12, 100, 0.5); // 地面のジオメトリを作成 (BoxGeometry)
+        const groundGeometry = new THREE.BoxGeometry(24, 100, 0.5); // 地面のジオメトリを作成 (BoxGeometry)
         var sphereMaterial = new THREE.MeshPhongMaterial();
         sphereMaterial.map = texture;
         const ground = new THREE.Mesh(groundGeometry, sphereMaterial); // メッシュを作成 (ジオメトリ + マテリアル)
@@ -161,9 +142,62 @@ textureloader.load(textureUrls[0], function (texture) {
         scene.add(ground);
     }
 },undefined, function ( error ) {
-	console.error( error );
+	console.error(error);
 } );
 
+let alpha;
+let beta;
+let gamma;
+// センサーの値の読み取り
+document.addEventListener("DOMContentLoaded", function () {
+    var aX = 0, aY = 0, aZ = 0;                     // 加速度の値を入れる変数を3個用意
+    alpha = 0, beta = 0, gamma = 0;                            
+    // 加速度センサの値が変化したら実行される devicemotion イベント
+    window.addEventListener("devicemotion", (dat) => {
+        aX = dat.accelerationIncludingGravity.x || 0;
+        aY = dat.accelerationIncludingGravity.y || 0;
+        aZ = dat.accelerationIncludingGravity.z || 0;
+        console.log('Acceleration:', aX, aY, aZ);
+    });
+    // ジャイロセンサー
+    window.addEventListener("deviceorientation", (event) => {
+        alpha = event.alpha || 0;
+        beta = event.beta || 0;
+        gamma = event.gamma || 0;
+        console.log('Gyro:', alpha, beta, gamma);
+    }, false);
+
+    // 指定時間ごとに繰り返し実行される setInterval(実行する内容, 間隔[ms]) タイマーを設定
+    var graphtimer = window.setInterval(() => {
+        displayData();
+    }, 33); // 33msごとに
+
+    function displayData() {
+        var resultAcc = document.getElementById("result_acc");
+        resultAcc.innerHTML = "x: " + aX.toFixed(2) + "<br>" +  // x軸の値
+            "y: " + aY.toFixed(2) + "<br>" +  // y軸の値
+            "z: " + aZ.toFixed(2);            // z軸の値
+        var resultGyro = document.getElementById("result_gyro");
+        resultGyro.innerHTML = "alpha: " + alpha.toFixed(2) + "<br>" +
+            "beta: " + beta.toFixed(2) + "<br>" +
+            "gamma: " + gamma.toFixed(2);
+    }
+})
+
+// playerの移動
+function move(index){
+    if ( gamma > 20 ){
+        if ( index == 0 || index == 1){
+            index += 1
+            player.position.x = course[index]
+        }
+    }else if (gamma < -20){
+        if ( index == 1 || index == 2){
+            index -= 1
+            player.position.x = course[index-1]
+        }
+    }
+}
 animate();
 
 // 描画関数
@@ -175,8 +209,7 @@ function animate() {
     if (mixer) {
         mixer.update(0.01); // delta time（時間の経過量）
     }
-
-    player.position.z -= 0.5
+    player.position.z -= 0.2
     
     if (player) {
         // プレイヤーの位置に基づいてカメラの位置を更新
@@ -187,8 +220,10 @@ function animate() {
     phone_list.forEach(phone => {
         phone.rotation.x += 0.01; // X軸周りに回転
         phone.rotation.y += 0.01; // Y軸周りに回転
+        phone.rotation.z += 0.01; // Y軸周りに回転
     });
 
+    move(index)
 }
 
 // ウィンドウのリサイズイベントをリッスン
