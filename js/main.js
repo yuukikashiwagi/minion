@@ -210,7 +210,7 @@ function move(){
             index -= 1
             player.position.x = course[index]
         }
-    }else if ( gamma < -20 ){
+    }else if ( gamma < -20 && !isJumping){
         if ( index == 1 || index == 2){
             isMoving = true
             index -= 1
@@ -237,10 +237,10 @@ function jump(){
     }
 }
 
-// function collision(){
+function collision(){
 
 
-// }
+}
 
 // 描画関数
 function animate() {
