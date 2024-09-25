@@ -88,7 +88,7 @@ glbloader.load(glbUrls[0], function (gltf) {
 
 let player;
 // プレイヤー
-glbloader.load(glbUrls[5], function (gltf) {
+glbloader.load(glbUrls[1], function (gltf) {
     player = gltf.scene
     player.scale.set(3,2,3)
     player.rotation.set(0,Math.PI,0)
