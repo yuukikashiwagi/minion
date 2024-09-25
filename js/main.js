@@ -197,20 +197,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // playerの移動
 function move(){
+    player.position.z -= 0.2
     if ( gamma > 20 && !isJumping && !isMoving){
         if ( index == 0 || index == 1){
-            isMoving = True
+            isMoving = true
             index += 1
             player.position.x = course[index]
         }
     }else if ( gamma < -20 && !isJumping && !isMoving){
         if ( index == 1 || index == 2){
-            isMoving = True
+            isMoving = true
             index -= 1
             player.position.x = course[index]
         }
     }else{
-        isMoving = False
+        isMoving = false
     }
 }
 
@@ -244,7 +245,6 @@ function animate() {
     if (mixer) {
         mixer.update(0.01); // delta time（時間の経過量）
     }
-    player.position.z -= 0.2
     
     if (player) {
         // プレイヤーの位置に基づいてカメラの位置を更新
