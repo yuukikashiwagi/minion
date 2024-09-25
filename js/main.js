@@ -59,6 +59,7 @@ const course = [-5,0,5]
 const gravity = 0.1
 let player_v_y = 0
 const initial_velocity = 0.5
+let isJumping = false
 // 建物の描写
 glbloader.load(glbUrls[0], function (gltf) {
     for ( let i = -50 ; i <= 50 ; i++){
@@ -208,7 +209,7 @@ function move(){
 }
 
 function jump(){
-    if ( !is_Jumping ){
+    if ( !isJumping ){
         if ( aZ > 0){
             player_v_y = initial_velocity
             isJumping = True
@@ -222,6 +223,11 @@ function jump(){
         }
     }
 }
+
+// function collision(){
+
+
+// }
 animate();
 
 // 描画関数
