@@ -192,7 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "beta: " + beta.toFixed(2) + "<br>" +
             "gamma: " + gamma.toFixed(2) + "<br>" +
             "index:" + index + "<br>" +
-            "isMoving:" + isMoving;
+            "isMoving:" + isMoving + "更新";
     }
 })
 
@@ -211,7 +211,7 @@ function move(){
             index -= 1
             player.position.x = course[index]
         }
-    }else if (gamma == 0){
+    }else if (gamma < 0.5 || gamma > -0.5){
         isMoving = false
     }
 }
