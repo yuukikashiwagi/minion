@@ -210,6 +210,12 @@ function move(){
             index -= 1
             player.position.x = course[index]
         }
+    }else if ( gamma < -20 ){
+        if ( index == 1 || index == 2){
+            isMoving = true
+            index -= 1
+            player.position.x = course[index]
+        }
     }else{
         isMoving = false
     }
@@ -217,7 +223,7 @@ function move(){
 
 function jump(){
     if ( !isJumping ){
-        if ( aZ > 0){
+        if ( aZ > 0 ){
             player_v_y = initial_velocity
             isJumping = True
             player.position.y += player_v_y
