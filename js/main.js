@@ -227,7 +227,8 @@ function animate() {
     });
     setInterval(() => {
         move()
-    })
+
+    },500)
 }
 
 // ウィンドウのリサイズイベントをリッスン
