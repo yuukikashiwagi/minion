@@ -176,7 +176,7 @@ function animate() {
         mixer.update(0.01); // delta time（時間の経過量）
     }
 
-    player.position.z -= 0.1
+    player.position.z -= 0.5
     
     if (player) {
         // プレイヤーの位置に基づいてカメラの位置を更新
