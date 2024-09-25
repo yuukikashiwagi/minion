@@ -54,7 +54,7 @@ const glbloader = new GLTFLoader();
 
 // レーンの設定
 let index = 1
-const course = [-4,0,4]
+const course = [-5,0,5]
 // 建物の描写
 glbloader.load(glbUrls[0], function (gltf) {
     for ( let i = -50 ; i <= 50 ; i++){
