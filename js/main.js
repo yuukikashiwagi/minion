@@ -225,8 +225,9 @@ function animate() {
         phone.rotation.y += 0.01; // Y軸周りに回転
         phone.rotation.z += 0.01; // Y軸周りに回転
     });
-
-    move()
+    setInterval(() => {
+        move()
+    })
 }
 
 // ウィンドウのリサイズイベントをリッスン
