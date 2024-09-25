@@ -191,7 +191,8 @@ document.addEventListener("DOMContentLoaded", function () {
             "alpha: " + alpha.toFixed(2) + "<br>" +
             "beta: " + beta.toFixed(2) + "<br>" +
             "gamma: " + gamma.toFixed(2) +
-            "index:" + index;
+            "index:" + index+
+            isMoving;
     }
 })
 
