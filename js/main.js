@@ -14,7 +14,7 @@ let player;
 let playerBox;
 let playerBoundingBox;
 let player_v_y = 0
-const initial_velocity = 1
+const initial_velocity = 100
 let isJumping = false
 let isMoving = false
 
