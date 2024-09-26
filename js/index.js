@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
         var lastGame = document.getElementById("score");
         var getPhone = localStorage.getItem('getPhone');
         var isGoal = localStorage.getItem('isGoal') // 文字列
-        if (isGoal == true){
+        if (isGoal === true){
             text = "おめでとう"
         }else{
             text = "残念"

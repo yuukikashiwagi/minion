@@ -255,7 +255,6 @@ function jump(){
         }
     }
 }
-
 function collision(){
     // コライダーボックスの位置をプレイヤーに同期
     var geometry = new THREE.BoxGeometry(3,4,2)
@@ -360,10 +359,10 @@ function animate() {
         phone.rotation.y += 0.01; // Y軸周りに回転
         phone.rotation.z += 0.01; // Y軸周りに回転
     });
+    console.log(typeof(phone_list))
     move()
     jump()
     collision()
-    console.log(player.position.y)
     renderer.render(scene, camera);
 }
 
