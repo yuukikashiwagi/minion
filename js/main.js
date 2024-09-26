@@ -237,7 +237,7 @@ function jump(){
         player_v_y -= gravity
         player.position.y += player_v_y
         if (player.position.y <= 0){
-            isJumping = false
+            // isJumping = false
             player.position.y = 0
         }
     }
