@@ -8,22 +8,20 @@ const course = [-5,0,5]
 
 let mixer;
 
-const gravity = 0.1
+const gravity = 0.05
 
 let player;
 let playerBox;
 let playerBoundingBox;
 let goalBoundingBox;
 let player_v_y = 0
-const initial_velocity = 100
+const initial_velocity = 0.8
 let isJumping = false
 let isMoving = false
 let isGoal = false
 
 let phone_list=[]
 let enemy_list = []
-let phone_hit_list = []
-let enemy_hit_list = []
 
 let alpha;
 let beta;
@@ -106,11 +104,11 @@ glbloader.load(glbUrls[1], function (gltf) {
     mixer = new THREE.AnimationMixer(player);
 
     // running アクションの取得と再生
-    console.log(gltf.animation)
+    // console.log(gltf.animation)
     const runningAction = gltf.animations.find(animation => animation.name === 'running');
     if (runningAction) {
         mixer.clipAction(runningAction).play();
-        console.log('running animation exists')
+        // console.log('running animation exists')
     } else {
         console.warn('Running animation not found in the model.');
     }
@@ -244,20 +242,15 @@ function move(){
 }
 
 function jump(){
-    if ( !isJumping && aZ >= 0){
+    if ( !isJumping && aZ > 0){
         player_v_y = initial_velocity
         isJumping = true
         player.position.y += player_v_y
-    }else if (aZ >= 0){
-        isJumping = true
-        console.log('ジャンプ')
-    }else if ( !isJumping ){
-        isJumping = true
-    }else{
+    }else if (isJumping){
         player_v_y -= gravity
         player.position.y += player_v_y
         if (player.position.y <= 0){
-            // isJumping = false
+            isJumping = false
             player.position.y = 0
         }
     }
@@ -358,8 +351,9 @@ function animate() {
     }
     if (player) {
         // プレイヤーの位置に基づいてカメラの位置を更新
-        camera.position.set(player.position.x, player.position.y + 7, player.position.z + 10); // プレイヤーの少し上方、後方にカメラを配置
-        camera.lookAt(player.position); // カメラがプレイヤーを向くように設定
+        camera.position.set(0, 8, player.position.z + 10); // プレイヤーの少し上方、後方にカメラを配置
+        // camera.lookAt(player.position); // カメラがプレイヤーを向くように設定
+        camera.lookAt(new THREE.Vector3(0,5,player.position.z))
     }
     phone_list.forEach(phone => {
         phone.rotation.x += 0.01; // X軸周りに回転
@@ -369,7 +363,7 @@ function animate() {
     move()
     jump()
     collision()
-
+    console.log(player.position.y)
     renderer.render(scene, camera);
 }
 
