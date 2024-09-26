@@ -17,6 +17,7 @@ let player_v_y = 0
 const initial_velocity = 100
 let isJumping = false
 let isMoving = false
+let isGoal = false
 
 let phone_list=[]
 let enemy_list = []
@@ -229,6 +230,9 @@ function jump(){
         player_v_y = initial_velocity
         isJumping = true
         player.position.y += player_v_y
+    }else if (aZ >= 0){
+        isJumping = true
+        console.log('ジャンプ')
     }else{
         player_v_y -= gravity
         player.position.y += player_v_y
@@ -257,12 +261,15 @@ function collision(){
     // 配列をフィルタリングするための新しい配列を作成
     enemy_list = enemy_list.filter((enemy) => {
         var enemyBoundingBox = new THREE.Box3().setFromObject(enemy);
-        var enemyHelper = new THREE.Box3Helper(enemyBoundingBox, 0xff0000);
-        scene.add(enemyHelper);
+        // var enemyHelper = new THREE.Box3Helper(enemyBoundingBox, 0xff0000); // 補助
+        // scene.add(enemyHelper);
         
         if (playerBoundingBox.intersectsBox(enemyBoundingBox)) {
             console.log('衝突しています');
             collisionEnemy += 1;
+            localStorage.setItem('getPhone', getPhone);
+            localStorage.setItem('isGoal', isGoal);
+            window.location.href = "./index.html";
             return false; // この敵を削除
         }
         return true; // この敵を保持
@@ -271,8 +278,8 @@ function collision(){
     // スマホオブジェクトの衝突判定
     phone_list = phone_list.filter((phone) => {
         var phoneBoundingBox = new THREE.Box3().setFromObject(phone);
-        var phoneHelper = new THREE.Box3Helper(phoneBoundingBox, 0xff0000);
-        scene.add(phoneHelper);
+        // var phoneHelper = new THREE.Box3Helper(phoneBoundingBox, 0xff0000); // 補助
+        // scene.add(phoneHelper);
         
         if (playerBoundingBox.intersectsBox(phoneBoundingBox)) {
             console.log('衝突しています');
