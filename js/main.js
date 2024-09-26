@@ -13,6 +13,7 @@ const gravity = 0.1
 let player;
 let playerBox;
 let playerBoundingBox;
+let goalBoundingBox;
 let player_v_y = 0
 const initial_velocity = 100
 let isJumping = false
@@ -38,6 +39,7 @@ const glbloader = new GLTFLoader();
 // texture内に保存されているjpgのパス
 const textureUrls = [
     'textures/ground.jpg',
+    'textures/goal.jpg',
 ];
 
 // 読み込むGLBモデルのパス
@@ -81,11 +83,11 @@ scene.add(light);
 
 // 建物の描写
 glbloader.load(glbUrls[0], function (gltf) {
-    for ( var i = -12 ; i <= 12 ; i++){
+    for ( var i = -24 ; i <= 24 ; i++){
         if (i !== 0){
             var model = gltf.scene.clone()
             model.rotation.set(0, ( Math.PI / 2 ) * Math.sign(i),0)
-            model.position.set(-14 * Math.sign(i),0, 30 -10 * Math.abs(i))
+            model.position.set(-14 * Math.sign(i),0, -10 * Math.abs(i))
             scene.add(model)
         }
     }
@@ -118,12 +120,12 @@ glbloader.load(glbUrls[1], function (gltf) {
 // スマホの描写
 glbloader.load(glbUrls[2], function (gltf) {
     var model;
-    for ( var g = 1; g < 5 ;g++){
+    for ( var g = 1; g < 10 ;g++){
         model = gltf.scene.clone()
         model.scale.set(15,15,15)
         model.rotation.set(0,( Math.PI / 4 ),( Math.PI / 4 ))
         const randomIndex = Math.floor(Math.random() * 3) // 0,1,2のランダム
-        model.position.set(course[randomIndex],2,-45*g)
+        model.position.set(course[randomIndex],2,-10*g)
         phone_list.push(model)// オブジェクトのバウンディングボックスを計算
         scene.add(model)
     }
@@ -133,11 +135,11 @@ glbloader.load(glbUrls[2], function (gltf) {
 
 // 障害物
 glbloader.load(glbUrls[3], function (gltf) {
-    for ( var g = 1; g < 5 ;g++){
+    for ( var g = 1; g < 10 ;g++){
         var model = gltf.scene.clone()
         model.scale.set(3,2,3)
         const randomIndex = Math.floor(Math.random() * 3) // 0,1,2のランダム
-        model.position.set(course[randomIndex],1, 10 -47*g)
+        model.position.set(course[randomIndex],1, -10*g)
         enemy_list.push(model)
         scene.add(model)
     }
@@ -147,16 +149,29 @@ glbloader.load(glbUrls[3], function (gltf) {
 
 // 道の描写
 textureloader.load(textureUrls[0], function (texture) {
-    for ( var l = 0 ; l < 3 ; l++){
-        const groundGeometry = new THREE.BoxGeometry(24, 100, 0.5); // 地面のジオメトリを作成 (BoxGeometry)
+    for ( var l = 0 ; l < 4 ; l++){
+        const groundGeometry = new THREE.BoxGeometry(24, 0.5, 100); // 地面のジオメトリを作成 (BoxGeometry)
         var sphereMaterial = new THREE.MeshPhongMaterial();
         sphereMaterial.map = texture;
         const ground = new THREE.Mesh(groundGeometry, sphereMaterial); // メッシュを作成 (ジオメトリ + マテリアル)
-        ground.rotation.set( Math.PI / 2 ,0,0)
-        ground.position.set(0, -0.3, 30-50 -100*l); // 地面の位置を設定
+        ground.position.set(0, -0.3, -50-100*l); // 地面の位置を設定
         ground.receiveShadow = true; // 影を受け取る設定
         scene.add(ground);
     }
+},undefined, function ( error ) {
+	console.error(error);
+} );
+
+// ゴールの描写
+textureloader.load(textureUrls[1], function (texture) {
+    const goalGeometry = new THREE.BoxGeometry(24, 10, 0.5); // 地面のジオメトリを作成 (BoxGeometry)
+    var sphereMaterial = new THREE.MeshPhongMaterial();
+    sphereMaterial.map = texture;
+    const goal = new THREE.Mesh(goalGeometry, sphereMaterial); // メッシュを作成 (ジオメトリ + マテリアル)
+    goal.position.set( 0 , 5, -200)
+    goalBoundingBox = new THREE.Box3().setFromObject(goal);
+    // ground.receiveShadow = true; // 影を受け取る設定
+    scene.add(goal);
 },undefined, function ( error ) {
 	console.error(error);
 } );
@@ -201,6 +216,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "collisionEnemy" + collisionEnemy + "<br>" +
             "aZ" + aZ + "<br>" +
             "isJumping" + isJumping + "<br>" +
+            "isGoal" + isGoal + "<br>" +
             "更新";
     }
 })
@@ -233,6 +249,8 @@ function jump(){
     }else if (aZ >= 0){
         isJumping = true
         console.log('ジャンプ')
+    }else if ( !isJumping ){
+        isJumping = true
     }else{
         player_v_y -= gravity
         player.position.y += player_v_y
@@ -284,10 +302,19 @@ function collision(){
         if (playerBoundingBox.intersectsBox(phoneBoundingBox)) {
             console.log('衝突しています');
             getPhone += 1;
+            scene.remove(phone)
             return false; // このスマホを削除
         }
         return true; // このスマホを保持
     });
+
+    if (playerBoundingBox.intersectsBox(goalBoundingBox)) { 
+        isGoal = true     
+        console.log('ゴール')     
+        localStorage.setItem('getPhone', getPhone);
+        localStorage.setItem('isGoal', isGoal);
+        window.location.href = "./index.html";
+    }
 
     // for (var enemy of enemy_list){
     //     var enemyBoundingBox = new THREE.Box3().setFromObject(enemy);
