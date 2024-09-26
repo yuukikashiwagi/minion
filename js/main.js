@@ -28,6 +28,8 @@ let enemy_hit_list = []
 let alpha;
 let beta;
 let gamma;
+let aX;
+let aY;
 let aZ;
 
 let getPhone = 0
@@ -178,7 +180,7 @@ textureloader.load(textureUrls[1], function (texture) {
 
 // センサーの値の読み取り
 document.addEventListener("DOMContentLoaded", function () {
-    var aX = 0, aY = 0, aZ = 0;                     // 加速度の値を入れる変数を3個用意
+    aX = 0, aY = 0, aZ = 0;                     // 加速度の値を入れる変数を3個用意
     alpha = 0, beta = 0, gamma = 0;                            
     // 加速度センサの値が変化したら実行される devicemotion イベント
     window.addEventListener("devicemotion", (dat) => {
