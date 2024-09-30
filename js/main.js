@@ -392,4 +392,4 @@ window.addEventListener('resize', () => {
     camera.updateProjectionMatrix(); // プロジェクションマトリクスを更新
 });
 
-animate();
+// animate();
