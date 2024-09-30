@@ -225,6 +225,8 @@ document.addEventListener("DOMContentLoaded", function () {
             "isMoving:" + isMoving + "<br>" +
             "getPhone" + getPhone + "<br>" +
             "collisionEnemy" + collisionEnemy + "<br>" +
+            "aX" + aX + "<br>" +
+            "aY" + aY + "<br>" +
             "aZ" + aZ + "<br>" +
             "isJumping" + isJumping + "<br>" +
             "isGoal" + isGoal + "<br>" +
