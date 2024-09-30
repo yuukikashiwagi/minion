@@ -217,18 +217,18 @@ document.addEventListener("DOMContentLoaded", function () {
         //     "y: " + aY.toFixed(2) + "<br>" +  // y軸の値
         //     "z: " + aZ.toFixed(2);            // z軸の値
         var resultGyro = document.getElementById("result_acc");
-        // resultGyro.innerHTML = 
-        //     "alpha: " + alpha.toFixed(2) + "<br>" +
-        //     "beta: " + beta.toFixed(2) + "<br>" +
-        //     "gamma: " + gamma.toFixed(2) + "<br>" +
-        //     "index:" + index + "<br>" +
-        //     "isMoving:" + isMoving + "<br>" +
-        //     "getPhone" + getPhone + "<br>" +
-        //     "collisionEnemy" + collisionEnemy + "<br>" +
-        //     "aZ" + aZ + "<br>" +
-        //     "isJumping" + isJumping + "<br>" +
-        //     "isGoal" + isGoal + "<br>" +
-        //     "更新";
+        resultGyro.innerHTML = 
+            "alpha: " + alpha.toFixed(2) + "<br>" +
+            "beta: " + beta.toFixed(2) + "<br>" +
+            "gamma: " + gamma.toFixed(2) + "<br>" +
+            "index:" + index + "<br>" +
+            "isMoving:" + isMoving + "<br>" +
+            "getPhone" + getPhone + "<br>" +
+            "collisionEnemy" + collisionEnemy + "<br>" +
+            "aZ" + aZ + "<br>" +
+            "isJumping" + isJumping + "<br>" +
+            "isGoal" + isGoal + "<br>" +
+            "更新";
     }
 })
 
