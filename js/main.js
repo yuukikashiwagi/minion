@@ -133,19 +133,30 @@ glbloader.load(glbUrls[2], function (gltf) {
 	console.error( error );
 } );
 
-// 障害物
-glbloader.load(glbUrls[3], function (gltf) {
-    for ( var g = 1; g < 10 ;g++){
-        var model = gltf.scene.clone()
-        model.scale.set(3,2,3)
-        const randomIndex = Math.floor(Math.random() * 3) // 0,1,2のランダム
-        model.position.set(course[randomIndex],1, -10*g)
-        enemy_list.push(model)
-        scene.add(model)
-    }
-},undefined, function ( error ) {
-	console.error( error );
-} );
+// // 障害物
+// glbloader.load(glbUrls[3], function (gltf) {
+//     for ( var g = 1; g < 10 ;g++){
+//         var model = gltf.scene.clone()
+//         model.scale.set(3,2,3)
+//         const randomIndex = Math.floor(Math.random() * 3) // 0,1,2のランダム
+//         model.position.set(course[randomIndex],1, -10*g)
+//         enemy_list.push(model)
+//         scene.add(model)
+//     }
+// },undefined, function ( error ) {
+// 	console.error( error );
+// } );
+
+// 障害物の描写
+for (var g=1 ; g<10 ; g++ ){
+    const groundGeometry = new THREE.ConeGeometry( 1, 4.5, 32 ); // コーンのジオメトリを作成 (BoxGeometry)
+    var sphereMaterial = new THREE.MeshPhongMaterial({color:0xFF0000});
+    const model = new THREE.Mesh(groundGeometry, sphereMaterial); // メッシュを作成 (ジオメトリ + マテリアル)
+    const randomIndex = Math.floor(Math.random() * 3) // 0,1,2のランダム
+    model.position.set(course[randomIndex],1, -10*g)
+    enemy_list.push(model)
+    scene.add(model)
+}
 
 // 道の描写
 textureloader.load(textureUrls[0], function (texture) {
@@ -221,7 +232,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 })
 
-// playerの移動
+// playerの左右移動
 function move(){
     player.position.z -= 0.2
     if ( gamma > 20 && !isJumping && !isMoving){
@@ -241,6 +252,7 @@ function move(){
     }
 }
 
+// ジャンプ
 function jump(){
     if ( !isJumping && aZ > 0){
         player_v_y = initial_velocity
@@ -255,6 +267,8 @@ function jump(){
         }
     }
 }
+
+// 衝突判定
 function collision(){
     // コライダーボックスの位置をプレイヤーに同期
     var geometry = new THREE.BoxGeometry(3,4,2)
