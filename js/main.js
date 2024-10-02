@@ -148,8 +148,8 @@ glbloader.load(glbUrls[2], function (gltf) {
 // } );
 
 // 障害物の描写
+const groundGeometry = new THREE.ConeGeometry( 1, 4.5, 32 );
 for (var g=1 ; g<10 ; g++ ){
-    const groundGeometry = new THREE.ConeGeometry( 1, 4.5, 32 ); // コーンのジオメトリを作成 (BoxGeometry)
     var sphereMaterial = new THREE.MeshPhongMaterial({color:0xFF0000});
     const model = new THREE.Mesh(groundGeometry, sphereMaterial); // メッシュを作成 (ジオメトリ + マテリアル)
     const randomIndex = Math.floor(Math.random() * 3) // 0,1,2のランダム
@@ -216,8 +216,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // resultAcc.innerHTML = "x: " + aX.toFixed(2) + "<br>" +  // x軸の値
         //     "y: " + aY.toFixed(2) + "<br>" +  // y軸の値
         //     "z: " + aZ.toFixed(2);            // z軸の値
-        var resultGyro = document.getElementById("result_acc");
-        resultGyro.innerHTML = 
+        var result = document.getElementById("result");
+        result.innerHTML = 
             "alpha: " + alpha.toFixed(2) + "<br>" +
             "beta: " + beta.toFixed(2) + "<br>" +
             "gamma: " + gamma.toFixed(2) + "<br>" +
@@ -259,7 +259,21 @@ function jump(){
     if ( !isJumping && aZ > 0){
         player_v_y = initial_velocity
         isJumping = true
+    }else if (isJumping){
+        player_v_y -= gravity
         player.position.y += player_v_y
+        if (player.position.y <= 0){
+            isJumping = false
+            player.position.y = 0
+        }
+    }
+}
+
+// ジャンプ
+function jump(){
+    if ( !isJumping && aZ > 0){
+        player_v_y = initial_velocity
+        isJumping = true
     }else if (isJumping){
         player_v_y -= gravity
         player.position.y += player_v_y
@@ -281,14 +295,14 @@ function collision(){
     playerBox.position.y = player.position.y + 2 
     playerBox.position.z = player.position.z
     playerBox.updateWorldMatrix(true, true);
-    var playerBoundingBox = new THREE.Box3().setFromObject(playerBox);
-    var playerHelper = new THREE.Box3Helper(playerBoundingBox, 0xff0000);
+    const playerBoundingBox = new THREE.Box3().setFromObject(playerBox);
+    const playerHelper = new THREE.Box3Helper(playerBoundingBox, 0xff0000);
     scene.add(playerHelper)
     let i = 0
 
     // 配列をフィルタリングするための新しい配列を作成
     enemy_list = enemy_list.filter((enemy) => {
-        var enemyBoundingBox = new THREE.Box3().setFromObject(enemy);
+        const enemyBoundingBox = new THREE.Box3().setFromObject(enemy);
         // var enemyHelper = new THREE.Box3Helper(enemyBoundingBox, 0xff0000); // 補助
         // scene.add(enemyHelper);
         
@@ -305,7 +319,7 @@ function collision(){
 
     // スマホオブジェクトの衝突判定
     phone_list = phone_list.filter((phone) => {
-        var phoneBoundingBox = new THREE.Box3().setFromObject(phone);
+        const phoneBoundingBox = new THREE.Box3().setFromObject(phone);
         // var phoneHelper = new THREE.Box3Helper(phoneBoundingBox, 0xff0000); // 補助
         // scene.add(phoneHelper);
         
@@ -392,4 +406,4 @@ window.addEventListener('resize', () => {
     camera.updateProjectionMatrix(); // プロジェクションマトリクスを更新
 });
 
-// animate();
+animate();
