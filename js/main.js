@@ -211,27 +211,27 @@ document.addEventListener("DOMContentLoaded", function () {
         displayData();
     }, 33); // 33msごとに
 
-    function displayData() {
-        // var resultAcc = document.getElementById("result_ac");
-        // resultAcc.innerHTML = "x: " + aX.toFixed(2) + "<br>" +  // x軸の値
-        //     "y: " + aY.toFixed(2) + "<br>" +  // y軸の値
-        //     "z: " + aZ.toFixed(2);            // z軸の値
-        var result = document.getElementById("result");
-        result.innerHTML = 
-            "alpha: " + alpha.toFixed(2) + "<br>" +
-            "beta: " + beta.toFixed(2) + "<br>" +
-            "gamma: " + gamma.toFixed(2) + "<br>" +
-            "index:" + index + "<br>" +
-            "isMoving:" + isMoving + "<br>" +
-            "getPhone" + getPhone + "<br>" +
-            "collisionEnemy" + collisionEnemy + "<br>" +
-            "aX" + aX + "<br>" +
-            "aY" + aY + "<br>" +
-            "aZ" + aZ + "<br>" +
-            "isJumping" + isJumping + "<br>" +
-            "isGoal" + isGoal + "<br>" +
-            "更新";
-    }
+    // function displayData() {
+    //     // var resultAcc = document.getElementById("result_ac");
+    //     // resultAcc.innerHTML = "x: " + aX.toFixed(2) + "<br>" +  // x軸の値
+    //     //     "y: " + aY.toFixed(2) + "<br>" +  // y軸の値
+    //     //     "z: " + aZ.toFixed(2);            // z軸の値
+    //     var result = document.getElementById("result");
+    //     result.innerHTML = 
+    //         "alpha: " + alpha.toFixed(2) + "<br>" +
+    //         "beta: " + beta.toFixed(2) + "<br>" +
+    //         "gamma: " + gamma.toFixed(2) + "<br>" +
+    //         "index:" + index + "<br>" +
+    //         "isMoving:" + isMoving + "<br>" +
+    //         "getPhone" + getPhone + "<br>" +
+    //         "collisionEnemy" + collisionEnemy + "<br>" +
+    //         "aX" + aX + "<br>" +
+    //         "aY" + aY + "<br>" +
+    //         "aZ" + aZ + "<br>" +
+    //         "isJumping" + isJumping + "<br>" +
+    //         "isGoal" + isGoal + "<br>" +
+    //         "更新";
+    // }
 })
 
 // playerの左右移動
