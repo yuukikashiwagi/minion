@@ -378,12 +378,12 @@ function animate() {
     if (mixer) {
         mixer.update(0.01); // delta time（時間の経過量）
     }
-    if (player) {
-        // プレイヤーの位置に基づいてカメラの位置を更新
-        camera.position.set(0, 8, player.position.z + 10); // プレイヤーの少し上方、後方にカメラを配置
-        // camera.lookAt(player.position); // カメラがプレイヤーを向くように設定
-        camera.lookAt(new THREE.Vector3(0,5,player.position.z))
-    }
+    // if (player) {
+    //     // プレイヤーの位置に基づいてカメラの位置を更新
+    //     camera.position.set(0, 8, player.position.z + 10); // プレイヤーの少し上方、後方にカメラを配置
+    //     // camera.lookAt(player.position); // カメラがプレイヤーを向くように設定
+    //     camera.lookAt(new THREE.Vector3(0,5,player.position.z))
+    // }
     phone_list.forEach(phone => {
         phone.rotation.x += 0.01; // X軸周りに回転
         phone.rotation.y += 0.01; // Y軸周りに回転
