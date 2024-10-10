@@ -1,9 +1,13 @@
+let lastGame;
+let getPhone;
+let isGoal;
+
 document.addEventListener("DOMContentLoaded", () => {
     var text;
     if (localStorage.length > 0) {
-        var lastGame = document.getElementById("score");
-        var getPhone = localStorage.getItem('getPhone');
-        var isGoal = localStorage.getItem('isGoal') // 文字列
+        lastGame = document.getElementById("score");
+        getPhone = localStorage.getItem('getPhone');
+        isGoal = localStorage.getItem('isGoal') // 文字列
         if (isGoal === true){
             text = "おめでとう"
         }else{
@@ -29,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
                 .catch((err) => console.error(err));
         } else {
-            // alert('まず、そんなものないね');
+            alert('まず、そんなものないね');
             window.location.href = "./race.html";
         }
     })
