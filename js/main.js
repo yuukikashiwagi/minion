@@ -232,9 +232,9 @@ document.addEventListener("DOMContentLoaded", function () {
   (alpha = 0), (beta = 0), (gamma = 0);
   // 加速度センサの値が変化したら実行される devicemotion イベント
   window.addEventListener("devicemotion", (dat) => {
-    aX = dat.accelerationIncludingGravity.x || 0;
-    aY = dat.accelerationIncludingGravity.y || 0;
-    aZ = dat.accelerationIncludingGravity.z || 0;
+    aX = -dat.accelerationIncludingGravity.x || 0;
+    aY = -dat.accelerationIncludingGravity.y || 0;
+    aZ = -dat.accelerationIncludingGravity.z || 0;
     console.log("Acceleration:", aX, aY, aZ);
   });
   // ジャイロセンサー
