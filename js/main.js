@@ -10,8 +10,8 @@ import {
   Mesh,
   BoxGeometry,
   Box3,
-  BoxGeometry,
   Vector3,
+  Box3Helper,
 } from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "loaders";
@@ -338,9 +338,9 @@ function collision() {
       console.log("衝突しています");
       collisionEnemy += 1;
       console.log(collisionEnemy);
-      // localStorage.setItem('getPhone', getPhone);
-      // localStorage.setItem('isGoal', isGoal);
-      // window.location.href = "./index.html";
+      localStorage.setItem("getPhone", getPhone);
+      localStorage.setItem("isGoal", isGoal);
+      window.location.href = "./index.html";
       return false; // この敵を削除
     }
     return true; // この敵を保持
