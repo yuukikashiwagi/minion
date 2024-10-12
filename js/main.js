@@ -17,7 +17,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "loaders";
 
 let isOnce = false;
-let iosOrAndrooid = true;
+let ios = true;
 // レーンの設定
 let index = 1;
 const course = [-5, 0, 5];
@@ -49,6 +49,13 @@ let aZ;
 
 let getPhone = 0;
 let collisionEnemy = 0;
+
+function iosOrAndrooid(aX, aY, aZ) {
+  let crossProduct = aX * aY;
+  if (crossProduct * aZ < 0) {
+    ios = false;
+  }
+}
 
 const textureloader = new TextureLoader();
 const glbloader = new GLTFLoader();
@@ -232,7 +239,7 @@ textureloader.load(
 document.addEventListener("DOMContentLoaded", function () {
   (aX = 0), (aY = 0), (aZ = 0); // 加速度の値を入れる変数を3個用意
   (alpha = 0), (beta = 0), (gamma = 0);
-  if (!iosOrAndrooid) {
+  if (!ios) {
     // 加速度センサの値が変化したら実行される devicemotion イベント
     window.addEventListener("devicemotion", (dat) => {
       aX = dat.accelerationIncludingGravity.x || 0;
@@ -429,10 +436,3 @@ window.addEventListener("resize", () => {
 });
 
 animate();
-
-function iosOrAndrooid(aX, aY, aZ) {
-  let crossProduct = aX * aY;
-  if (crossProduct * aZ < 0) {
-    iosOrAndrooid = false;
-  }
-}
