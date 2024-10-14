@@ -239,23 +239,22 @@ textureloader.load(
 document.addEventListener("DOMContentLoaded", function () {
   (aX = 0), (aY = 0), (aZ = 0); // 加速度の値を入れる変数を3個用意
   (alpha = 0), (beta = 0), (gamma = 0);
-  if (ios) {
-    // 加速度センサの値が変化したら実行される devicemotion イベント
-    window.addEventListener("devicemotion", (dat) => {
+  // 加速度センサの値が変化したら実行される devicemotion イベント
+  window.addEventListener("devicemotion", (dat) => {
+    if (ios) {
+      // ios
       aX = dat.accelerationIncludingGravity.x || 0;
       aY = dat.accelerationIncludingGravity.y || 0;
       aZ = dat.accelerationIncludingGravity.z || 0;
       console.log("Acceleration:", aX, aY, aZ);
-    });
-  } else {
-    // Android
-    window.addEventListener("devicemotion", (dat) => {
-      aX = -dat.accelerationIncludingGravity.x || 0;
-      aY = -dat.accelerationIncludingGravity.y || 0;
-      aZ = -dat.accelerationIncludingGravity.z || 0;
+    } else {
+      // Android
+      aX = dat.accelerationIncludingGravity.x || 0;
+      aY = dat.accelerationIncludingGravity.y || 0;
+      aZ = dat.accelerationIncludingGravity.z || 0;
       console.log("Acceleration:", aX, aY, aZ);
-    });
-  }
+    }
+  });
   if (!isOnce) {
     iosOrAndrooid(aX, aY, aZ);
     isOnce = true;
