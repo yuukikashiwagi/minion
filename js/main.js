@@ -26,7 +26,6 @@ let mixer;
 
 const gravity = 0.05;
 
-let player;
 let playerBox;
 let playerBoundingBox;
 let goalBoundingBox;
@@ -49,28 +48,6 @@ let aZ;
 
 let getPhone = 0;
 let collisionEnemy = 0;
-
-function iosOrAndrooid(aX, aY, aZ) {
-  let crossProduct = aX * aY;
-  if (crossProduct * aZ < 0) {
-    ios = false;
-  }
-}
-
-const textureloader = new TextureLoader();
-const glbloader = new GLTFLoader();
-
-// texture内に保存されているjpgのパス
-const textureUrls = ["textures/ground.jpg", "textures/goal.jpg"];
-
-// 読み込むGLBモデルのパス
-const glbUrls = [
-  "glb/houses.glb", // 周り
-  "glb/player.glb", // プレイヤー
-  "glb/phone.glb", // コイン
-  "glb/red_corn.glb", // 障害物１
-  "glb/long_red_corn.glb", // 障害物2
-];
 
 // シーン
 var scene = new Scene();
@@ -102,6 +79,28 @@ const light = new DirectionalLight(0xffffff, 1);
 light.position.set(10, 10, 10);
 scene.add(light);
 
+function iosOrAndrooid(aX, aY, aZ) {
+  let crossProduct = aX * aY;
+  if (crossProduct * aZ < 0) {
+    ios = false;
+  }
+}
+
+const textureloader = new TextureLoader();
+const glbloader = new GLTFLoader();
+
+// texture内に保存されているjpgのパス
+const textureUrls = ["textures/ground.jpg", "textures/goal.jpg"];
+
+// 読み込むGLBモデルのパス
+const glbUrls = [
+  "glb/houses.glb", // 周り
+  "glb/player.glb", // プレイヤー
+  "glb/phone.glb", // コイン
+  "glb/red_corn.glb", // 障害物１
+  "glb/long_red_corn.glb", // 障害物2
+];
+
 // 建物の描写
 glbloader.load(
   glbUrls[0],
@@ -125,7 +124,6 @@ glbloader.load(
 glbloader.load(
   glbUrls[1],
   function (gltf) {
-    player = gltf.scene;
     player.scale.set(3, 2, 3);
     player.rotation.set(0, Math.PI, 0);
     player.position.set(0, 0, 0);
@@ -249,9 +247,9 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log("Acceleration:", aX, aY, aZ);
     } else {
       // Android
-      aX = dat.accelerationIncludingGravity.x || 0;
-      aY = dat.accelerationIncludingGravity.y || 0;
-      aZ = dat.accelerationIncludingGravity.z || 0;
+      aX = -dat.accelerationIncludingGravity.x || 0;
+      aY = -dat.accelerationIncludingGravity.y || 0;
+      aZ = -dat.accelerationIncludingGravity.z || 0;
       console.log("Acceleration:", aX, aY, aZ);
     }
   });
